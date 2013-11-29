@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">MediaChooser_learnNcode</string>
+    <string name="image"> Image </string>
+    <string name="video"> Video </string>
+    <string name="images_tab"> Images </string>
+    <string name="videos_tab"> Videos </string>
+    <string name="max_limit_reach_error"> Maximum limit reached.</string>
+
+</resources>

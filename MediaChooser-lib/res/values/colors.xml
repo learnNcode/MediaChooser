@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Gallery thumbnail background -->
+    <drawable name="transprent_drawable">#00000000</drawable>
+
+</resources>
