@@ -26,8 +26,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.learnNcode.mediachooser.BucketEntry;
@@ -78,7 +78,7 @@ public class BucketGridAdapter extends ArrayAdapter<BucketEntry> {
 				break;
 			}
 		}
-		
+
 		if(!success){
 			BucketEntry latestBucketEntry = new BucketEntry(0, MediaChooserConstants.folderName, url);
 			mBucketEntryList.add(0, latestBucketEntry);
@@ -96,12 +96,12 @@ public class BucketGridAdapter extends ArrayAdapter<BucketEntry> {
 			mWidth = display.getWidth();  // deprecated
 
 			LayoutInflater viewInflater;
-			viewInflater = LayoutInflater.from(getContext());
+			viewInflater = LayoutInflater.from(mContext);
 			convertView  = viewInflater.inflate(R.layout.view_grid_bucket_item_media_chooser, parent, false);
 
 			holder = new ViewHolder();
-			holder.imageView    = (ImageView) convertView.findViewById(R.id.imageViewFromBucketRowView);
-			holder.nameTextView = (TextView) convertView.findViewById(R.id.nameTextViewFromBucketRowView);
+			holder.imageView    = (ImageView) convertView.findViewById(R.id.imageViewFromMediaChooserBucketRowView);
+			holder.nameTextView = (TextView) convertView.findViewById(R.id.nameTextViewFromMediaChooserBucketRowView);
 
 			convertView.setTag(holder);
 
@@ -109,7 +109,7 @@ public class BucketGridAdapter extends ArrayAdapter<BucketEntry> {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		LayoutParams imageParams = (LayoutParams) holder.imageView.getLayoutParams();
+		FrameLayout.LayoutParams imageParams = (FrameLayout.LayoutParams) holder.imageView.getLayoutParams();
 		imageParams.width  = mWidth/2;
 		imageParams.height = mWidth/2;
 

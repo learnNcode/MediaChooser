@@ -18,6 +18,7 @@
 
 package com.learnNcode.mediachooser.fragment;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -164,23 +165,34 @@ public class VideoFragment extends Fragment implements OnScrollListener {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				// update the mStatus of each category in the adapter
-				GridViewAdapter adapter   = (GridViewAdapter) parent.getAdapter();
+				GridViewAdapter adapter = (GridViewAdapter) parent.getAdapter();
 				MediaModel galleryModel = (MediaModel) adapter.getItem(position);
 
-				if((MediaChooserConstants.MAX_MEDIA_LIMIT == MediaChooserConstants.SELECTED_MEDIA_COUNT) && (! galleryModel.status)){
+				if(! galleryModel.status){
+					long size = MediaChooserConstants.ChekcMediaFileSize(new File(galleryModel.url.toString()), true);
+					if(size != 0){
+						Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.file_size_exeeded) + "  " + MediaChooserConstants.SELECTED_VIDEO_SIZE_IN_MB + " " +  getActivity().getResources().getString(R.string.mb), Toast.LENGTH_SHORT).show();
+						return;
+					}
 
-					Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.max_limit_reach_error), Toast.LENGTH_SHORT).show();
+					if((MediaChooserConstants.MAX_MEDIA_LIMIT == MediaChooserConstants.SELECTED_MEDIA_COUNT)){
 
-				}else{
+						Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.max_limit_reach_error), Toast.LENGTH_SHORT).show();
+						return;
+					}
+				}
+			
 					// inverse the status
 					galleryModel.status = ! galleryModel.status;
 					adapter.notifyDataSetChanged();
 
 					if (galleryModel.status) {
 						mSelectedItems.add(galleryModel.url.toString());
+						MediaChooserConstants.SELECTED_MEDIA_COUNT ++;
 
 					}else{
 						mSelectedItems.remove(galleryModel.url.toString().trim());
+						MediaChooserConstants.SELECTED_MEDIA_COUNT --;
 					}
 
 					if (mCallback != null) {
@@ -189,7 +201,7 @@ public class VideoFragment extends Fragment implements OnScrollListener {
 						intent.putStringArrayListExtra("list", mSelectedItems);
 						getActivity().setResult(Activity.RESULT_OK, intent);
 					}
-				}
+				
 			}
 		});
 
@@ -237,6 +249,7 @@ public class VideoFragment extends Fragment implements OnScrollListener {
 			int visibleItemCount, int totalItemCount) {
 
 	}
+
 
 }
 

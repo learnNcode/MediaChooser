@@ -38,7 +38,6 @@ import com.learnNcode.mediachooser.activity.HomeFragmentActivity;
 import com.learnNcode.mediachooser.adapter.BucketGridAdapter;
 
 public class BucketImageFragment extends Fragment{
-
 	private final String TAG = "BucketImageActivity";
 
 	// The indices should match the following projections.
@@ -116,5 +115,6 @@ public class BucketImageFragment extends Fragment{
 	public BucketGridAdapter getAdapter() {
 		return	bucketAdapter;
 	}
+	
 
 }

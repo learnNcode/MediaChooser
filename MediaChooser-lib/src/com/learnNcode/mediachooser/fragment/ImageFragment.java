@@ -17,6 +17,7 @@
 
 package com.learnNcode.mediachooser.fragment;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -40,7 +41,6 @@ import com.learnNcode.mediachooser.adapter.GridViewAdapter;
 
 
 public class ImageFragment extends Fragment {
-
 	private ArrayList<String> mSelectedItems = new ArrayList<String>();
 	private ArrayList<MediaModel> mGalleryModelList;
 	private GridView mImageGridView;
@@ -65,7 +65,6 @@ public class ImageFragment extends Fragment {
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString() + " must implement OnHeadlineSelectedListener");
 		}
-
 	}
 
 	public ImageFragment(){
@@ -78,7 +77,6 @@ public class ImageFragment extends Fragment {
 
 		if(mView == null){
 			mView = inflater.inflate(R.layout.view_grid_layout_media_chooser, container, false);
-
 
 			mImageGridView = (GridView) mView.findViewById(R.id.gridViewFromMediaChooser);
 
@@ -148,31 +146,42 @@ public class ImageFragment extends Fragment {
 				GridViewAdapter adapter = (GridViewAdapter) parent.getAdapter();
 				MediaModel galleryModel = (MediaModel) adapter.getItem(position);
 
-				if((MediaChooserConstants.MAX_MEDIA_LIMIT == MediaChooserConstants.SELECTED_MEDIA_COUNT) && (! galleryModel.status)){
 
-					Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.max_limit_reach_error), Toast.LENGTH_SHORT).show();
-
-				}else{
-
-					// inverse the status
-					galleryModel.status = ! galleryModel.status;
-
-					adapter.notifyDataSetChanged();
-
-					if (galleryModel.status) {
-						mSelectedItems.add(galleryModel.url.toString());
-
-					}else{
-						mSelectedItems.remove(galleryModel.url.toString().trim());
+				if(! galleryModel.status){
+					long size = MediaChooserConstants.ChekcMediaFileSize(new File(galleryModel.url.toString()), false);
+					if(size != 0){
+						Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.file_size_exeeded) + "  " + MediaChooserConstants.SELECTED_IMAGE_SIZE_IN_MB + " " +  getActivity().getResources().getString(R.string.mb), Toast.LENGTH_SHORT).show();
+						return;
 					}
 
-					if (mCallback != null) {
-						mCallback.onImageSelected(mSelectedItems.size());
-						Intent intent = new Intent();
-						intent.putStringArrayListExtra("list", mSelectedItems);
-						getActivity().setResult(Activity.RESULT_OK, intent);
+					if((MediaChooserConstants.MAX_MEDIA_LIMIT == MediaChooserConstants.SELECTED_MEDIA_COUNT)){
+
+						Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.max_limit_reach_error), Toast.LENGTH_SHORT).show();
+						return;
 					}
 				}
+
+				// inverse the status
+				galleryModel.status = ! galleryModel.status;
+
+				adapter.notifyDataSetChanged();
+
+				if (galleryModel.status) {
+					mSelectedItems.add(galleryModel.url.toString());
+					MediaChooserConstants.SELECTED_MEDIA_COUNT ++;
+
+				}else{
+					mSelectedItems.remove(galleryModel.url.toString().trim());
+					MediaChooserConstants.SELECTED_MEDIA_COUNT --;
+				}
+
+				if (mCallback != null) {
+					mCallback.onImageSelected(mSelectedItems.size());
+					Intent intent = new Intent();
+					intent.putStringArrayListExtra("list", mSelectedItems);
+					getActivity().setResult(Activity.RESULT_OK, intent);
+				}
+
 			}
 		});
 	}

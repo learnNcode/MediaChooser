@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -31,12 +32,17 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.learnNcode.mediachooser.MediaChooser;
 import com.learnNcode.mediachooser.MediaChooserConstants;
 import com.learnNcode.mediachooser.R;
 import com.learnNcode.mediachooser.fragment.BucketImageFragment;
@@ -48,8 +54,9 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
 	private TextView headerBarTitle;
 	private ImageView headerBarCamera;
 	private ImageView headerBarBack;
+	private ImageView headerBarDone;
 
-	private Uri fileUri;
+	private static Uri fileUri;
 	private ArrayList<String> mSelectedVideo = new ArrayList<String>();
 	private ArrayList<String> mSelectedImage = new ArrayList<String>();
 	private final Handler handler = new Handler();
@@ -58,28 +65,61 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		System.out.println("BucketHomeFragmentActivity.onCreate()");
 		setContentView(R.layout.activity_home_media_chooser);
 
-		headerBarTitle  = (TextView)findViewById(R.id.titleTextViewFromHeaderBar);
-		headerBarCamera = (ImageView)findViewById(R.id.cameraImageViewFromHeaderBar);
-		headerBarBack   = (ImageView)findViewById(R.id.backArrowImageViewFromHeaderView);
+		headerBarTitle  = (TextView)findViewById(R.id.titleTextViewFromMediaChooserHeaderBar);
+		headerBarCamera = (ImageView)findViewById(R.id.cameraImageViewFromMediaChooserHeaderBar);
+		headerBarBack   = (ImageView)findViewById(R.id.backArrowImageViewFromMediaChooserHeaderView);
+		headerBarDone   = (ImageView)findViewById(R.id.doneImageViewFromMediaChooserHeaderView);
 		mTabHost        = (FragmentTabHost) findViewById(android.R.id.tabhost);
 
 		headerBarTitle.setText(getResources().getString(R.string.video));
 		headerBarCamera.setBackgroundResource(R.drawable.ic_video_white);
 		headerBarCamera.setTag(getResources().getString(R.string.video));
 
-		mTabHost.setup(this, getSupportFragmentManager(), R.id.tabFrameLayoutFromMediaChooser);
+		headerBarBack.setOnClickListener(clickListener);
+		headerBarCamera.setOnClickListener(clickListener);
+		headerBarDone.setOnClickListener(clickListener);
 
-		mTabHost.addTab(
-				mTabHost.newTabSpec("tab2").setIndicator(getString(R.string.video), null),
-				BucketVideoFragment.class, null);
+		if(! MediaChooserConstants.showCameraVideo){
+			headerBarCamera.setVisibility(View.GONE);
+		}
 
-		mTabHost.addTab(
-				mTabHost.newTabSpec("tab1").setIndicator(getString(R.string.image), null),
-				BucketImageFragment.class, null);
+		mTabHost.setup(this, getSupportFragmentManager(), R.id.tabFrameLayout);
 
+
+
+		if(MediaChooserConstants.showVideo){
+			mTabHost.addTab(
+					mTabHost.newTabSpec("tab2").setIndicator("Video"),
+					BucketVideoFragment.class, null);
+		}
+
+		if(MediaChooserConstants.showImage){
+			mTabHost.addTab(
+					mTabHost.newTabSpec("tab1").setIndicator("Image"),
+					BucketImageFragment.class, null);
+		}
+
+		for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {
+
+			TextView textView = (TextView) mTabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
+			if(textView.getLayoutParams() instanceof RelativeLayout.LayoutParams){
+
+				RelativeLayout.LayoutParams params = (android.widget.RelativeLayout.LayoutParams) textView.getLayoutParams();
+				params.addRule(RelativeLayout.CENTER_HORIZONTAL);
+				params.addRule(RelativeLayout.CENTER_VERTICAL);
+				params.height = RelativeLayout.LayoutParams.MATCH_PARENT;
+				params.width  = RelativeLayout.LayoutParams.WRAP_CONTENT;
+				mTabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title).setLayoutParams(params);
+
+			}else if(textView.getLayoutParams() instanceof LinearLayout.LayoutParams){
+				LinearLayout.LayoutParams params = (android.widget.LinearLayout.LayoutParams) textView.getLayoutParams();
+				params.gravity = Gravity.CENTER;
+				mTabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title).setLayoutParams(params);
+			}
+
+		}
 
 		mTabHost.setOnTabChangedListener(new OnTabChangeListener() {
 
@@ -100,7 +140,7 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
 
 					if(imageFragment == null){   
 						BucketImageFragment newImageFragment = new BucketImageFragment();
-						fragmentTransaction.add(R.id.tabFrameLayoutFromMediaChooser, newImageFragment, "tab1"); 
+						fragmentTransaction.add(R.id.tabFrameLayout, newImageFragment, "tab1"); 
 
 					}else{
 
@@ -119,7 +159,7 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
 					if(videoFragment == null){
 
 						final BucketVideoFragment newVideoFragment = new BucketVideoFragment();
-						fragmentTransaction.add(R.id.tabFrameLayoutFromMediaChooser, newVideoFragment, "tab2");  
+						fragmentTransaction.add(R.id.tabFrameLayout, newVideoFragment, "tab2");  
 
 					}else{
 
@@ -134,28 +174,17 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
 			}
 		});
 
+	}
 
-		headerBarBack.setOnClickListener(new OnClickListener() {
+	OnClickListener clickListener = new OnClickListener() {
 
-			@Override
-			public void onClick(View arg0) {
-				finish();
-
-			}
-		});
-
-
-		headerBarCamera.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View view) {
+		@Override
+		public void onClick(View view) {
+			if(view == headerBarCamera){
 
 				if(view.getTag().toString().equals(getResources().getString(R.string.video))){
 					Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-
-
 					fileUri = getOutputMediaFileUri(MediaChooserConstants.MEDIA_TYPE_VIDEO); // create a file to save the image
-
 					intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); // set the image file name
 
 					// start the image capture Intent
@@ -163,22 +192,41 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
 
 				}else{
 					Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
 					fileUri = getOutputMediaFileUri(MediaChooserConstants.MEDIA_TYPE_IMAGE); // create a file to save the image
-
 					intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); // set the image file name
 
 					// start the image capture Intent
 					startActivityForResult(intent, MediaChooserConstants.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
 				}
-			}
-		});
-	}
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-	}
+			}else if(view == headerBarDone){
+
+				if(mSelectedImage.size() == 0 && mSelectedVideo.size() == 0){
+					Toast.makeText(BucketHomeFragmentActivity.this, getString(R.string.plaese_select_file), Toast.LENGTH_SHORT).show();
+
+				}else{
+
+					if(mSelectedVideo.size() > 0){
+						Intent videoIntent = new Intent();
+						videoIntent.setAction(MediaChooser.VIDEO_SELECTED_ACTION_FROM_MEDIA_CHOOSER);
+						videoIntent.putStringArrayListExtra("list", mSelectedVideo);
+						sendBroadcast(videoIntent);
+					}
+
+					if(mSelectedImage.size() > 0){
+						Intent imageIntent = new Intent();
+						imageIntent.setAction(MediaChooser.IMAGE_SELECTED_ACTION_FROM_MEDIA_CHOOSER);
+						imageIntent.putStringArrayListExtra("list", mSelectedImage);
+						sendBroadcast(imageIntent);
+					}
+					finish();
+				}
+
+			}else if(view == headerBarBack){
+				finish();
+			}
+		}
+	};
 
 	/** Create a file Uri for saving an image or video */
 	private Uri getOutputMediaFileUri(int type){
@@ -224,7 +272,11 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
 				addMedia(mSelectedVideo, data.getStringArrayListExtra("list"));
 
 			}else if (requestCode == MediaChooserConstants.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE){
+
 				sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, fileUri));
+				final AlertDialog alertDialog = MediaChooserConstants.getDialog(BucketHomeFragmentActivity.this).create();
+				alertDialog.show();
+
 				handler.postDelayed(new Runnable() {
 					@Override
 					public void run() {
@@ -236,12 +288,17 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
 							bucketImageFragment.getAdapter().addLatestEntry(fileUriString);
 							bucketImageFragment.getAdapter().notifyDataSetChanged();
 						}
+						alertDialog.dismiss();
 					}
-				}, 2000);
+				}, 5000);
 
 			}else if (requestCode == MediaChooserConstants.CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE){
+
+
 				sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, fileUri));
 
+				final AlertDialog alertDialog = MediaChooserConstants.getDialog(BucketHomeFragmentActivity.this).create();
+				alertDialog.show();
 				handler.postDelayed(new Runnable() {
 					@Override
 					public void run() {
@@ -252,9 +309,11 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
 						if(bucketVideoFragment != null){   
 							bucketVideoFragment.getAdapter().addLatestEntry(fileUriString);
 							bucketVideoFragment.getAdapter().notifyDataSetChanged();
+
 						}
+						alertDialog.dismiss();
 					}
-				}, 2000);
+				}, 5000);
 			}
 		}
 	}
@@ -263,25 +322,6 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
 		for (String string : input) {
 			list.add(string);
 		}
-	}
-
-	@Override
-	public void finish() {
-
-		if(mSelectedVideo.size() > 0){
-			Intent videoIntent = new Intent();
-			videoIntent.setAction(MediaChooserConstants.VIDEO_SELECTED_ACTION_FROM_MEDIA_CHOOSER);
-			videoIntent.putStringArrayListExtra("list", mSelectedVideo);
-			sendBroadcast(videoIntent);
-		}
-
-		if(mSelectedImage.size() > 0){
-			Intent imageIntent = new Intent();
-			imageIntent.setAction(MediaChooserConstants.IMAGE_SELECTED_ACTION_FROM_MEDIA_CHOOSER);
-			imageIntent.putStringArrayListExtra("list", mSelectedImage);
-			sendBroadcast(imageIntent);
-		}
-		super.finish();
 	}
 
 }

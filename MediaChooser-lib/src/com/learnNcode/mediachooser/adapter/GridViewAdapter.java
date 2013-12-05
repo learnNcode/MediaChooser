@@ -38,7 +38,6 @@ import com.learnNcode.mediachooser.async.VideoLoadAsync;
 import com.learnNcode.mediachooser.fragment.VideoFragment;
 
 public class GridViewAdapter extends ArrayAdapter<MediaModel> {
-
 	public VideoFragment videoFragment;  
 
 	private Context mContext;
@@ -83,8 +82,8 @@ public class GridViewAdapter extends ArrayAdapter<MediaModel> {
 			convertView = viewInflater.inflate(R.layout.view_grid_item_media_chooser, parent, false);
 
 			holder = new ViewHolder();
-			holder.checkBoxTextView   = (CheckedTextView) convertView.findViewById(R.id.checkTextViewFromGridItemRowView);
-			holder.imageView          = (ImageView) convertView.findViewById(R.id.imageViewFromGridItemRowView);
+			holder.checkBoxTextView   = (CheckedTextView) convertView.findViewById(R.id.checkTextViewFromMediaChooserGridItemRowView);
+			holder.imageView          = (ImageView) convertView.findViewById(R.id.imageViewFromMediaChooserGridItemRowView);
 
 			convertView.setTag(holder);
 

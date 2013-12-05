@@ -17,6 +17,13 @@
 
 package com.learnNcode.mediachooser;
 
+import java.io.File;
+
+import android.app.AlertDialog;
+import android.content.Context;
+import android.view.LayoutInflater;
+
+
 public class MediaChooserConstants {
 
 	/**
@@ -25,26 +32,21 @@ public class MediaChooserConstants {
 	public static String folderName = "learnNcode";
 
 	/**
-	 * No of item that can be selected. Default is 10.
+	 * No of item that can be selected. Default is 100.
 	 */
-	public static int MAX_MEDIA_LIMIT = 10;
+	public static int MAX_MEDIA_LIMIT = 100;
 
 	/**
 	 * Selected media file count.
 	 */
 	public static int SELECTED_MEDIA_COUNT  = 0;
 
+	public static boolean showCameraVideo = true;
+	public static boolean showVideo 	  = true;
+	public static boolean showImage 	  = true;
 
-	/**
-	 * Video file selected broadcast action.
-	 */
-	public static final String VIDEO_SELECTED_ACTION_FROM_MEDIA_CHOOSER = "lNc_videoSelectedAction"; 
-	
-	/**
-	 *  Image file selected broadcast action.
-	 */
-	public static final String IMAGE_SELECTED_ACTION_FROM_MEDIA_CHOOSER = "lNc_imageSelectedAction"; 
-
+	public static int SELECTED_IMAGE_SIZE_IN_MB = 20;
+	public static int SELECTED_VIDEO_SIZE_IN_MB = 20;
 	
 	
 	public static final int BUCKET_SELECT_IMAGE_CODE = 1000;
@@ -56,6 +58,38 @@ public class MediaChooserConstants {
 	public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 	public static final int CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE = 200;
 
+	
+	public static long ChekcMediaFileSize(File mediaFile, boolean isVideo){
 
+		/** Get length of file in bytes */
+		long fileSizeInBytes = mediaFile.length();
+
+		/** Convert the bytes to Kilobytes (1 KB = 1024 Bytes) */
+		long fileSizeInKB = fileSizeInBytes / 1024;
+
+		/** Convert the KB to MegaBytes (1 MB = 1024 KBytes) */
+		long fileSizeInMB = fileSizeInKB / 1024;
+
+		int requireSize = 0;
+		if(isVideo){
+			requireSize = MediaChooserConstants.SELECTED_VIDEO_SIZE_IN_MB;
+		}else{
+			requireSize = MediaChooserConstants.SELECTED_IMAGE_SIZE_IN_MB;
+		}
+		if (fileSizeInMB <= requireSize) {
+			return 0;
+		}
+		return fileSizeInMB;
+	}
+
+
+	public static AlertDialog.Builder getDialog(Context context){
+		final AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+		dialog.setCancelable(false);
+		dialog.setTitle(context.getString(R.string.please_wait_text));
+		LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		dialog.setView(layoutInflater.inflate(R.layout.view_loading_media_chooser, null));
+		return dialog;
+	}
 
 }

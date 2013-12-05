@@ -40,7 +40,6 @@ import com.learnNcode.mediachooser.activity.HomeFragmentActivity;
 import com.learnNcode.mediachooser.adapter.BucketGridAdapter;
 
 public class BucketVideoFragment extends Fragment{
-
 	private final String TAG = "BucketVideoFragment";
 
 	// The indices should match the following projections.
@@ -51,7 +50,7 @@ public class BucketVideoFragment extends Fragment{
 	private static final String[] PROJECTION_BUCKET = {
 		VideoColumns.BUCKET_ID,
 		VideoColumns.BUCKET_DISPLAY_NAME,
-		VideoColumns.DATA
+		VideoColumns.DATA,
 	};
 
 	private View mView;
@@ -88,6 +87,8 @@ public class BucketVideoFragment extends Fragment{
 				BucketEntry entry = new BucketEntry(
 						cursor.getInt(INDEX_BUCKET_ID),
 						cursor.getString(INDEX_BUCKET_NAME),cursor.getString(INDEX_BUCKET_URL));
+
+			
 
 				if (! buffer.contains(entry)) {
 					buffer.add(entry);
