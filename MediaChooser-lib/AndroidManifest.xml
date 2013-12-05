@@ -2,17 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.learnNcode.mediachooser"
     android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionName="1.0.1" >
 
     <uses-sdk
         android:minSdkVersion="10"
         android:targetSdkVersion="18" />
-
-    <supports-screens
-        android:anyDensity="true"
-        android:largeScreens="true"
-        android:normalScreens="true"
-        android:smallScreens="true" />
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
@@ -37,12 +31,10 @@
         </activity>
         <activity
             android:name="com.learnNcode.mediachooser.fragment.ImageFragment"
-            android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.learnNcode.mediachooser.fragment.VideoFragment"
-            android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" >
         </activity>
     </application>
