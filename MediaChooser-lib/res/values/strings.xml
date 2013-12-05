@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">MediaChooser_learnNcode</string>
+    <string name="app_name">MediaChooser</string>
     <string name="image"> Image </string>
     <string name="video"> Video </string>
     <string name="images_tab"> Images </string>
     <string name="videos_tab"> Videos </string>
-    <string name="max_limit_reach_error"> Maximum limit reached.</string>
+    <string name="max_limit_reach_error"> Max limit 10 file. </string>
+    <string name="please_wait_text"> Please wait</string>
+    <string name="refreshing"> Refreshing</string>
+    <string name="file_size_exeeded"> The file size exceeds the maximum limit of </string>
+    <string name="selected_file_size">  Selected media size is : </string>
+    <string name="mb"> MB</string>
+    <string name="plaese_select_file"> Please select a file.</string>
 
 </resources>

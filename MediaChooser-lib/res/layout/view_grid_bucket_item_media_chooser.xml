@@ -1,26 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="wrap_content" >
 
     <ImageView
-        android:id="@+id/imageViewFromBucketRowView"
+        android:id="@+id/imageViewFromMediaChooserBucketRowView"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_alignParentTop="true"
         android:background="@null"
         android:contentDescription="@null"
         android:scaleType="centerCrop"
         android:src="@drawable/loading" />
 
     <TextView
-        android:id="@+id/nameTextViewFromBucketRowView"
+        android:id="@+id/nameTextViewFromMediaChooserBucketRowView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/imageViewFromBucketRowView"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:background="@android:color/darker_gray"
+        android:layout_gravity="bottom"
+        android:background="#88666666"
         android:ellipsize="end"
         android:gravity="center"
         android:maxLines="1"
@@ -28,4 +25,4 @@
         android:textColor="@android:color/white"
         android:textSize="20sp" />
 
-</RelativeLayout>
+</FrameLayout>
