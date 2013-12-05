@@ -1,88 +1,148 @@
 Media Chooser
-======================
+===================================
 
 Library to browse & select videos and images from disk.
 
 
-Screenshot
-=========
+Screenshots
+-----------------------------------
+
+![Video items](https://dl.dropboxusercontent.com/u/61919232/learnNcode/MediaChooser/fileView.png "File view")
+
+<br>
+
+![Folder image items](https://dl.dropboxusercontent.com/u/61919232/learnNcode/MediaChooser/folderView.png "Folder view")
 
 
-![Video items](https://dl.dropboxusercontent.com/u/61919232/learnNcode/MediaChooser/video_selected.png "File view")
-<p>
-![Folder image items](https://dl.dropboxusercontent.com/u/61919232/learnNcode/MediaChooser/bucket_image.png "Folder view")
 
-
-
-setup
-===================
+Setup
+-----------------------------------
 Add following permission to your applications manifest file.
-
-     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+```xml
+ <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+```
 
 Add following code to the application node of your application's manifest file
+```xml
+<activity
+    android:name="com.learnNcode.mediachooser.activity.BucketHomeFragmentActivity"
+    android:screenOrientation="portrait" >
+</activity>
 
-    <activity
-        android:name="com.learnNcode.mediachooser.activity.HomeFragmentActivity"
-        android:configChanges="orientation|screenSize"
-        android:screenOrientation="portrait" />
-    <activity
-        android:name="com.learnNcode.mediachooser.activity.BucketHomeFragmentActivity"
-        android:configChanges="orientation|screenSize"
-        android:screenOrientation="portrait" />
+<activity
+    android:name="com.learnNcode.mediachooser.activity.HomeFragmentActivity"
+    android:screenOrientation="portrait" >
+</activity>
+```
+
+ChangeLog
+-----------------------------------
+__1]__ Fixed nexus 10 crash.
+
+__2]__ Added helper methods for ease.
+
 
 What does this library do ?
-==================
-
+-----------------------------------
 Useful library for selecting images and videos from sd-card. The library can be used to disply images & videos in  file view or folder view.
 File view shows all files whereas Folder view shows files categorized.
 All items are sorted according to date-time with latest item showing first.
 
 
 
-
 Usage
-=====
+-----------------------------------
 
-    To display images and videos according to:
-    ================================================
-     1]Folders 
+To display images and videos according to:
     
-        Intent intent = new Intent(MainActivity.this, BucketHomeFragmentActivity.class);
-        startActivity(intent);
+__1]__Folders 
+```java
+Intent intent = new Intent(MainActivity.this, BucketHomeFragmentActivity.class);
+startActivity(intent);
+```
                
-     2]Files          
-        Intent intent = new Intent(MainActivity.this, HomeFragmentActivity.class);
-    	startActivity(intent);
+__2]__Files  
+```java
+Intent intent = new Intent(MainActivity.this, HomeFragmentActivity.class);
+startActivity(intent);
+```        
         
-    To get list of selected images and videos :
-    =================================================
-    1] For images you have to register a broadcast with "MediaChooserConstants.IMAGE_SELECTED_ACTION_FROM_MEDIA_CHOOSER" action.
-    Example:
-    IntentFilter imageIntentFilter = new IntentFilter(MediaChooserConstants.IMAGE_SELECTED_ACTION_FROM_MEDIA_CHOOSER);
-    	registerReceiver(imageBroadcastReceiver, imageIntentFilter);
         
-    2] For videos you have to register a broadcast with "MediaChooserConstants.VIDEO_SELECTED_ACTION_FROM_MEDIA_CHOOSER" action.
-    Example:
-    IntentFilter videoIntentFilter = new IntentFilter(MediaChooserConstants.VIDEO_SELECTED_ACTION_FROM_MEDIA_CHOOSER);
-    	registerReceiver(videoBroadcastReceiver, videoIntentFilter);
-        
-Note
-==================
-    You can define number of image/video selection by:
-     MediaChooserConstants.MAX_MEDIA_LIMIT = 20;  //default set to 10.
+To get list of selected images and videos :
+-----------------------------------------------------
     
-    You can get total selected count by:
-    int totalCount = MediaChooserConstants.SELECTED_MEDIA_COUNT;
+__1]__ For images you have to register a broadcast with 
+
+`MediaChooser.IMAGE_SELECTED_ACTION_FROM_MEDIA_CHOOSER`action.
+    
+Example:
+```java
+IntentFilter imageIntentFilter = new IntentFilter(MediaChooser.IMAGE_SELECTED_ACTION_FROM_MEDIA_CHOOSER);
+registerReceiver(imageBroadcastReceiver, imageIntentFilter);
+```
+        
+__2]__ For videos you have to register a broadcast with 
+    `MediaChooser.VIDEO_SELECTED_ACTION_FROM_MEDIA_CHOOSER` action.
+    
+Example:
+```java
+IntentFilter videoIntentFilter = new IntentFilter(MediaChooser.VIDEO_SELECTED_ACTION_FROM_MEDIA_CHOOSER);
+registerReceiver(videoBroadcastReceiver, videoIntentFilter);
+```        
+
+Helper methods
+-----------------------------------
+__1]__ showCameraVideoView : To hide/show camera button.
+        example: 
+```java 
+MediaChooser.showCameraVideoView(false); // This will hide the view. By default its visible.
+``` 
+ 
+__2]__ setImageSize and setVideoSize : To set file size limit in mb for image/video selection.
+        example: 
+```java 
+MediaChooser.setVideoSize(10); // Default set to 20mb.
+MediaChooser.setImageSize(10); // Default set to 20mb.
+```
+ 
+__3]__setSelectionLimit : To set number of items that can be selected.
+        example: 
+```java         
+MediaChooser.setSelectionLimit(10);  //default set to 100.
+```
+ 
+__4]__ setSelectedMediaCount / getSelectedMediaCount : To set/retrieve total selected file count.
+      example: 
+```java 
+int totalCount = MediaChooser.getSelectedMediaCount();
+```
+ 
+__5]__ showOnlyImageTab :- To show image tab only.
+        example:  
+```java 
+MediaChooser.showOnlyImageTab();
+```
+        
+__6]__ showOnlyVideoTab :- To show video tab only.
+        example: 
+```java 
+MediaChooser.showOnlyVideoTab();
+```
+        
+__7]__ showImageVideoTab : To display both image and video tab.
+        example: 
+```java 
+MediaChooser.showImageVideoTab(); //By default both tabs are visible.
+```
 
 Check the attached demo sample app.
     
 Acknowledgement
-==============
+-----------------------------------
 [Picasso jar](http://square.github.io/picasso/)
     
 License
-======
+-----------------------------------
 
     Copyright 2013 learnNcode (learnncode@gmail.com)
 
@@ -99,7 +159,7 @@ License
     limitations under the License.
 
 Thank You
-========
+-----------------------------------
 
   If you like our work say a hi :)
   <br>
