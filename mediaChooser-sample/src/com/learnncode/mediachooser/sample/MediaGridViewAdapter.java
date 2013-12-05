@@ -116,12 +116,10 @@ public class MediaGridViewAdapter extends ArrayAdapter<String> {
 
 		File mediaFile = new File(mediaFilePathList.get(position));
 
-		System.out.println("--------------imgFile|" + mediaFile.getPath());
 		if(mediaFile.exists()){
-
 			if(mediaFile.getPath().contains("mp4") || mediaFile.getPath().contains("wmv") ||
 					mediaFile.getPath().contains("avi") || mediaFile.getPath().contains("3gp") ){
-
+				holder.imageView.setImageBitmap(null);
 				holder.imageView.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.ic_video));
 
 			}else{

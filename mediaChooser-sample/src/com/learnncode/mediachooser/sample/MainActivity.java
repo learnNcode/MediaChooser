@@ -1,3 +1,19 @@
+/*
+ * Copyright 2013 - learnNcode (learnncode@gmail.com)
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package com.learnncode.mediachooser.sample;
 
 import java.util.List;
@@ -14,7 +30,7 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import com.learnNcode.mediachooser.MediaChooserConstants;
+import com.learnNcode.mediachooser.MediaChooser;
 import com.learnNcode.mediachooser.activity.BucketHomeFragmentActivity;
 import com.learnNcode.mediachooser.activity.HomeFragmentActivity;
 
@@ -35,14 +51,13 @@ public class MainActivity extends Activity {
 		folderViewButton.setOnClickListener(clickListener);
 		fileViewButton.setOnClickListener(clickListener);
 
-		IntentFilter videoIntentFilter = new IntentFilter(MediaChooserConstants.VIDEO_SELECTED_ACTION_FROM_MEDIA_CHOOSER);
+		IntentFilter videoIntentFilter = new IntentFilter(MediaChooser.VIDEO_SELECTED_ACTION_FROM_MEDIA_CHOOSER);
 		registerReceiver(videoBroadcastReceiver, videoIntentFilter);
 
-		IntentFilter imageIntentFilter = new IntentFilter(MediaChooserConstants.IMAGE_SELECTED_ACTION_FROM_MEDIA_CHOOSER);
+		IntentFilter imageIntentFilter = new IntentFilter(MediaChooser.IMAGE_SELECTED_ACTION_FROM_MEDIA_CHOOSER);
 		registerReceiver(imageBroadcastReceiver, imageIntentFilter);
 
 	}
-
 
 
 	OnClickListener clickListener = new OnClickListener() {
@@ -50,7 +65,7 @@ public class MainActivity extends Activity {
 		@Override
 		public void onClick(View view) {
 			if(view == folderViewButton){
-
+				MediaChooser.setSelectionLimit(20);
 				Intent intent = new Intent(MainActivity.this, BucketHomeFragmentActivity.class);
 				startActivity(intent);
 
@@ -58,7 +73,6 @@ public class MainActivity extends Activity {
 				Intent intent = new Intent(MainActivity.this, HomeFragmentActivity.class);
 				startActivity(intent);
 			}
-
 		}
 	};
 
@@ -78,7 +92,6 @@ public class MainActivity extends Activity {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-
 			Toast.makeText(MainActivity.this, "yippiee Image ", Toast.LENGTH_SHORT).show();
 			Toast.makeText(MainActivity.this, "Image SIZE :" + intent.getStringArrayListExtra("list").size(), Toast.LENGTH_SHORT).show();
 			setAdapter(intent.getStringArrayListExtra("list"));
@@ -101,5 +114,4 @@ public class MainActivity extends Activity {
 			adapter.notifyDataSetChanged();
 		}
 	}
-
 }

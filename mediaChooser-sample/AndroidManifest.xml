@@ -26,14 +26,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-     <activity
-            android:name="com.learnNcode.mediachooser.activity.HomeFragmentActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait" />
         <activity
             android:name="com.learnNcode.mediachooser.activity.BucketHomeFragmentActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.learnNcode.mediachooser.activity.HomeFragmentActivity"
+            android:screenOrientation="portrait" >
+        </activity>
     </application>
 
 </manifest>
