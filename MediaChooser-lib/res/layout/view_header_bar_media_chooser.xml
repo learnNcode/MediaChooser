@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/postToActionBarFromMediaChooser"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:layout_alignParentTop="true"
+    android:background="@android:color/background_dark" >
+
+    <ImageView
+        android:id="@+id/backArrowImageViewFromMediaChooserHeaderView"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="@null"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_back_from_media_chooser_header_bar"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/titleTextViewFromMediaChooserHeaderBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
+        android:text="@string/video"
+        android:textColor="@android:color/white"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/doneImageViewFromMediaChooserHeaderView"
+        android:layout_width="45dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="3dp"
+        android:adjustViewBounds="true"
+        android:padding="10dp"
+        android:contentDescription="@null"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_selection_done_media_chooser" />
+
+    <ImageView
+        android:id="@+id/cameraImageViewFromMediaChooserHeaderBar"
+        android:layout_width="32dp"
+        android:layout_height="24dp"
+        android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:layout_toLeftOf="@id/doneImageViewFromMediaChooserHeaderView"
+        android:adjustViewBounds="true"
+        android:contentDescription="@null"
+        android:scaleType="centerCrop"
+         />
+
+</RelativeLayout>
