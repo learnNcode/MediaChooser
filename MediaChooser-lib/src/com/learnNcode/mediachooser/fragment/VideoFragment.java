@@ -176,32 +176,36 @@ public class VideoFragment extends Fragment implements OnScrollListener {
 					}
 
 					if((MediaChooserConstants.MAX_MEDIA_LIMIT == MediaChooserConstants.SELECTED_MEDIA_COUNT)){
-
-						Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.max_limit_reach_error), Toast.LENGTH_SHORT).show();
-						return;
+						if (MediaChooserConstants.SELECTED_MEDIA_COUNT < 2) {
+							Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.max_limit_reach_error) + "  " + MediaChooserConstants.SELECTED_MEDIA_COUNT + " " +  getActivity().getResources().getString(R.string.file), Toast.LENGTH_SHORT).show();
+							return;
+						} else {
+							Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.max_limit_reach_error) + "  " + MediaChooserConstants.SELECTED_MEDIA_COUNT + " " +  getActivity().getResources().getString(R.string.files), Toast.LENGTH_SHORT).show();
+							return;
+						}
 					}
 				}
-			
-					// inverse the status
-					galleryModel.status = ! galleryModel.status;
-					adapter.notifyDataSetChanged();
 
-					if (galleryModel.status) {
-						mSelectedItems.add(galleryModel.url.toString());
-						MediaChooserConstants.SELECTED_MEDIA_COUNT ++;
+				// inverse the status
+				galleryModel.status = ! galleryModel.status;
+				adapter.notifyDataSetChanged();
 
-					}else{
-						mSelectedItems.remove(galleryModel.url.toString().trim());
-						MediaChooserConstants.SELECTED_MEDIA_COUNT --;
-					}
+				if (galleryModel.status) {
+					mSelectedItems.add(galleryModel.url.toString());
+					MediaChooserConstants.SELECTED_MEDIA_COUNT ++;
 
-					if (mCallback != null) {
-						mCallback.onVideoSelected(mSelectedItems.size());
-						Intent intent = new Intent();
-						intent.putStringArrayListExtra("list", mSelectedItems);
-						getActivity().setResult(Activity.RESULT_OK, intent);
-					}
-				
+				}else{
+					mSelectedItems.remove(galleryModel.url.toString().trim());
+					MediaChooserConstants.SELECTED_MEDIA_COUNT --;
+				}
+
+				if (mCallback != null) {
+					mCallback.onVideoSelected(mSelectedItems.size());
+					Intent intent = new Intent();
+					intent.putStringArrayListExtra("list", mSelectedItems);
+					getActivity().setResult(Activity.RESULT_OK, intent);
+				}
+
 			}
 		});
 
