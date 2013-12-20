@@ -73,7 +73,7 @@ VideoFragment.OnVideoSelectedListener{
 
 
 
-		mTabHost.setup(this, getSupportFragmentManager(), R.id.tabcontent);
+		mTabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
 		headerBarBack.setOnClickListener(clickListener);
 		headerBarCamera.setOnClickListener(clickListener);
 		headerBarDone.setOnClickListener(clickListener);
