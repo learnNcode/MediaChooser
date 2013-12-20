@@ -85,7 +85,7 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
 			headerBarCamera.setVisibility(View.GONE);
 		}
 
-		mTabHost.setup(this, getSupportFragmentManager(), R.id.tabFrameLayout);
+		mTabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
 
 
 
@@ -140,7 +140,7 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
 
 					if(imageFragment == null){   
 						BucketImageFragment newImageFragment = new BucketImageFragment();
-						fragmentTransaction.add(R.id.tabFrameLayout, newImageFragment, "tab1"); 
+						fragmentTransaction.add(android.R.id.tabcontent, newImageFragment, "tab1"); 
 
 					}else{
 
@@ -159,7 +159,7 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
 					if(videoFragment == null){
 
 						final BucketVideoFragment newVideoFragment = new BucketVideoFragment();
-						fragmentTransaction.add(R.id.tabFrameLayout, newVideoFragment, "tab2");  
+						fragmentTransaction.add(android.R.id.tabcontent, newVideoFragment, "tab2");  
 
 					}else{
 
