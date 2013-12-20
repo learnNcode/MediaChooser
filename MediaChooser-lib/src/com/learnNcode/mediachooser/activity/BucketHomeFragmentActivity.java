@@ -85,7 +85,7 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
 			headerBarCamera.setVisibility(View.GONE);
 		}
 
-		mTabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
+		mTabHost.setup(this, getSupportFragmentManager(), R.id.tabcontent);
 
 
 
@@ -132,6 +132,22 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
 				android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
 
+				/*if(tabId.equalsIgnoreCase("tab1")){
+					if(imageFragment != null){   
+						if(videoFragment != null){
+							fragmentTransaction.hide(videoFragment);
+						}
+						fragmentTransaction.show(imageFragment); 
+					}
+				}else{ 
+					if(videoFragment != null){
+						if(videoFragment != null){
+							fragmentTransaction.hide(imageFragment);
+						}
+						fragmentTransaction.show(videoFragment);   
+					}
+				}*/
+
 				if(tabId.equalsIgnoreCase("tab1")){
 
 					headerBarTitle.setText(getResources().getString(R.string.image));
@@ -140,7 +156,7 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
 
 					if(imageFragment == null){   
 						BucketImageFragment newImageFragment = new BucketImageFragment();
-						fragmentTransaction.add(android.R.id.tabcontent, newImageFragment, "tab1"); 
+						fragmentTransaction.add(R.id.tabcontent, newImageFragment, "tab1"); 
 
 					}else{
 
@@ -159,7 +175,7 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
 					if(videoFragment == null){
 
 						final BucketVideoFragment newVideoFragment = new BucketVideoFragment();
-						fragmentTransaction.add(android.R.id.tabcontent, newVideoFragment, "tab2");  
+						fragmentTransaction.add(R.id.tabcontent, newVideoFragment, "tab2");  
 
 					}else{
 
