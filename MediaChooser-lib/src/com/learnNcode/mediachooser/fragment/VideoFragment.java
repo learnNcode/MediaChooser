@@ -177,10 +177,10 @@ public class VideoFragment extends Fragment implements OnScrollListener {
 
 					if((MediaChooserConstants.MAX_MEDIA_LIMIT == MediaChooserConstants.SELECTED_MEDIA_COUNT)){
 						if (MediaChooserConstants.SELECTED_MEDIA_COUNT < 2) {
-							Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.max_limit_reach_error) + "  " + MediaChooserConstants.SELECTED_MEDIA_COUNT + " " +  getActivity().getResources().getString(R.string.file), Toast.LENGTH_SHORT).show();
+							Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.max_limit_file) + "  " + MediaChooserConstants.SELECTED_MEDIA_COUNT + " " +  getActivity().getResources().getString(R.string.file), Toast.LENGTH_SHORT).show();
 							return;
 						} else {
-							Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.max_limit_reach_error) + "  " + MediaChooserConstants.SELECTED_MEDIA_COUNT + " " +  getActivity().getResources().getString(R.string.files), Toast.LENGTH_SHORT).show();
+							Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.max_limit_file) + "  " + MediaChooserConstants.SELECTED_MEDIA_COUNT + " " +  getActivity().getResources().getString(R.string.files), Toast.LENGTH_SHORT).show();
 							return;
 						}
 					}
