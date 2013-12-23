@@ -15,7 +15,7 @@
     <string name="plaese_select_file"> Please select a file.</string>
     
       <string name="file"> file. </string>
-       <string name="file"> files. </string>
+       <string name="files"> files. </string>
     
 
 </resources>
