@@ -13,5 +13,9 @@
     <string name="selected_file_size">  Selected media size is : </string>
     <string name="mb"> MB</string>
     <string name="plaese_select_file"> Please select a file.</string>
+    
+      <string name="file"> file. </string>
+       <string name="file"> files. </string>
+    
 
 </resources>
