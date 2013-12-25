@@ -73,7 +73,7 @@ public class VideoFragment extends Fragment implements OnScrollListener {
 		try {
 			mCallback = (OnVideoSelectedListener) activity;
 		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString() + " must implement OnHeadlineSelectedListener");
+			throw new ClassCastException(activity.toString() + " must implement OnVideoSelectedListener");
 		}
 	}
 
