@@ -63,7 +63,7 @@ public class ImageFragment extends Fragment {
 		try {
 			mCallback = (OnImageSelectedListener) activity;
 		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString() + " must implement OnHeadlineSelectedListener");
+			throw new ClassCastException(activity.toString() + " must implement OnImageSelectedListener");
 		}
 	}
 
