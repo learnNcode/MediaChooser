@@ -16,15 +16,15 @@
 
 
 
-package com.learnNcode.mediachooser.async;
+package com.learnncode.mediachooser.async;
 
 import android.app.ActivityManager;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.widget.ImageView;
 
-import com.learnNcode.mediachooser.GalleryCache;
-import com.learnNcode.mediachooser.GalleryRetainCache;
+import com.learnncode.mediachooser.GalleryCache;
+import com.learnncode.mediachooser.GalleryRetainCache;
 
 public class VideoLoadAsync extends MediaAsync<String,String, String>{
 

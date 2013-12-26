@@ -1,4 +1,4 @@
-package com.learnNcode.mediachooser;
+package com.learnncode.mediachooser;
 
 import java.util.ArrayList;
 
@@ -10,10 +10,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.util.LruCache;
 import android.widget.ImageView;
 
-import com.learnNcode.mediachooser.adapter.BucketGridAdapter;
-import com.learnNcode.mediachooser.adapter.GridViewAdapter;
-import com.learnNcode.mediachooser.fragment.BucketVideoFragment;
-import com.learnNcode.mediachooser.fragment.VideoFragment;
+import com.learnncode.mediachooser.adapter.BucketGridAdapter;
+import com.learnncode.mediachooser.adapter.GridViewAdapter;
+import com.learnncode.mediachooser.fragment.BucketVideoFragment;
+import com.learnncode.mediachooser.fragment.VideoFragment;
 
 
 

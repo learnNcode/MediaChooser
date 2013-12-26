@@ -16,7 +16,7 @@
 
 
 
-package com.learnNcode.mediachooser.fragment;
+package com.learnncode.mediachooser.fragment;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -38,10 +38,10 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import com.learnNcode.mediachooser.MediaChooserConstants;
-import com.learnNcode.mediachooser.MediaModel;
-import com.learnNcode.mediachooser.R;
-import com.learnNcode.mediachooser.adapter.GridViewAdapter;
+import com.learnncode.mediachooser.MediaChooserConstants;
+import com.learnncode.mediachooser.MediaModel;
+import com.learnncode.mediachooser.R;
+import com.learnncode.mediachooser.adapter.GridViewAdapter;
 
 public class VideoFragment extends Fragment implements OnScrollListener {
 
@@ -102,6 +102,9 @@ public class VideoFragment extends Fragment implements OnScrollListener {
 
 		}else{
 			((ViewGroup) mView.getParent()).removeView(mView);
+			if(mVideoAdapter == null || mVideoAdapter.getCount() == 0){
+				Toast.makeText(getActivity(), getActivity().getString(R.string.no_media_file_available), Toast.LENGTH_SHORT).show();
+			}
 		}
 
 		return mView;
@@ -142,24 +145,30 @@ public class VideoFragment extends Fragment implements OnScrollListener {
 	private void setAdapter() {
 		int count = mCursor.getCount();
 
-		mDataColumnIndex = mCursor.getColumnIndex(MEDIA_DATA);
+		if(count > 0){
 
-		//move position to first element
-		mCursor.moveToFirst();
 
-		mGalleryModelList = new ArrayList<MediaModel>();
-		for(int i= 0; i < count; i++) {
-			mCursor.moveToPosition(i);
-			String url = mCursor.getString(mDataColumnIndex);
-			mGalleryModelList.add(new MediaModel(url, false));
+			mDataColumnIndex = mCursor.getColumnIndex(MEDIA_DATA);
+
+			//move position to first element
+			mCursor.moveToFirst();
+
+			mGalleryModelList = new ArrayList<MediaModel>();
+			for(int i= 0; i < count; i++) {
+				mCursor.moveToPosition(i);
+				String url = mCursor.getString(mDataColumnIndex);
+				mGalleryModelList.add(new MediaModel(url, false));
+			}
+
+
+			mVideoAdapter =  new GridViewAdapter(getActivity(), 0, mGalleryModelList, true);
+			mVideoAdapter.videoFragment = this;
+			mVideoGridView.setAdapter(mVideoAdapter);
+			mVideoGridView.setOnScrollListener(this);
+		}else{
+			Toast.makeText(getActivity(), getActivity().getString(R.string.no_media_file_available), Toast.LENGTH_SHORT).show();
+
 		}
-
-
-		mVideoAdapter =  new GridViewAdapter(getActivity(), 0, mGalleryModelList, true);
-		mVideoAdapter.videoFragment = this;
-		mVideoGridView.setAdapter(mVideoAdapter);
-		mVideoGridView.setOnScrollListener(this);
-
 		mVideoGridView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -212,9 +221,13 @@ public class VideoFragment extends Fragment implements OnScrollListener {
 	}
 
 	public void addItem(String item) {
-		MediaModel model = new MediaModel(item, false);
-		mGalleryModelList.add(0, model);
-		mVideoAdapter.notifyDataSetChanged();
+		if(mVideoAdapter != null){
+			MediaModel model = new MediaModel(item, false);
+			mGalleryModelList.add(0, model);
+			mVideoAdapter.notifyDataSetChanged();
+		}else{
+			initVideos();
+		}
 	}
 
 

@@ -1,4 +1,4 @@
-package com.learnNcode.mediachooser.async;
+package com.learnncode.mediachooser.async;
 
 import java.util.ArrayDeque;
 import java.util.concurrent.BlockingQueue;

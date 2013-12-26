@@ -15,7 +15,7 @@
  */
 
 
-package com.learnNcode.mediachooser;
+package com.learnncode.mediachooser;
 
 import java.io.File;
 

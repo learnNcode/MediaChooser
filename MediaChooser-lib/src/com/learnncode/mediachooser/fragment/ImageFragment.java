@@ -15,7 +15,7 @@
  */
 
 
-package com.learnNcode.mediachooser.fragment;
+package com.learnncode.mediachooser.fragment;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -34,10 +34,10 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import com.learnNcode.mediachooser.MediaChooserConstants;
-import com.learnNcode.mediachooser.MediaModel;
-import com.learnNcode.mediachooser.R;
-import com.learnNcode.mediachooser.adapter.GridViewAdapter;
+import com.learnncode.mediachooser.MediaChooserConstants;
+import com.learnncode.mediachooser.MediaModel;
+import com.learnncode.mediachooser.R;
+import com.learnncode.mediachooser.adapter.GridViewAdapter;
 
 
 public class ImageFragment extends Fragment {
@@ -47,6 +47,7 @@ public class ImageFragment extends Fragment {
 	private View mView;
 	private OnImageSelectedListener mCallback;
 	private GridViewAdapter mImageAdapter;
+	private Cursor mImageCursor;
 
 
 	// Container Activity must implement this interface
@@ -89,6 +90,9 @@ public class ImageFragment extends Fragment {
 
 		}else{
 			((ViewGroup) mView.getParent()).removeView(mView);
+			if(mImageAdapter == null || mImageAdapter.getCount() == 0){
+				Toast.makeText(getActivity(), getActivity().getString(R.string.no_media_file_available), Toast.LENGTH_SHORT).show();
+			}
 		}
 
 		return mView;
@@ -103,8 +107,9 @@ public class ImageFragment extends Fragment {
 			searchParams = "bucket_display_name = \"" + bucket + "\"";
 
 			final String[] columns = { MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID};
-			Cursor imagecursor = getActivity().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, searchParams, null, orderBy + " DESC");
-			setAdapter(imagecursor);
+			mImageCursor = getActivity().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, searchParams, null, orderBy + " DESC");
+
+			setAdapter(mImageCursor);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -114,9 +119,9 @@ public class ImageFragment extends Fragment {
 		try {
 			final String orderBy = MediaStore.Images.Media.DATE_TAKEN;
 			final String[] columns = { MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID};
-			Cursor imagecursor = getActivity().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, null, null, orderBy + " DESC");
+			mImageCursor = getActivity().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, null, null, orderBy + " DESC");
 
-			setAdapter(imagecursor);
+			setAdapter(mImageCursor);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -124,18 +129,24 @@ public class ImageFragment extends Fragment {
 
 
 	private void setAdapter(Cursor imagecursor) {
-		mGalleryModelList = new ArrayList<MediaModel>();
 
-		for (int i = 0; i < imagecursor.getCount(); i++) {
-			imagecursor.moveToPosition(i);
-			int dataColumnIndex       = imagecursor.getColumnIndex(MediaStore.Images.Media.DATA);
-			MediaModel galleryModel   = new MediaModel(imagecursor.getString(dataColumnIndex).toString(), false);
-			mGalleryModelList.add(galleryModel);
+		if(imagecursor.getCount() > 0){
+
+			mGalleryModelList = new ArrayList<MediaModel>();
+
+			for (int i = 0; i < imagecursor.getCount(); i++) {
+				imagecursor.moveToPosition(i);
+				int dataColumnIndex       = imagecursor.getColumnIndex(MediaStore.Images.Media.DATA);
+				MediaModel galleryModel   = new MediaModel(imagecursor.getString(dataColumnIndex).toString(), false);
+				mGalleryModelList.add(galleryModel);
+			}
+
+
+			mImageAdapter = new GridViewAdapter(getActivity(), 0, mGalleryModelList, false);
+			mImageGridView.setAdapter(mImageAdapter);
+		}else{
+			Toast.makeText(getActivity(), getActivity().getString(R.string.no_media_file_available), Toast.LENGTH_SHORT).show();
 		}
-
-
-		mImageAdapter = new GridViewAdapter(getActivity(), 0, mGalleryModelList, false);
-		mImageGridView.setAdapter(mImageAdapter);
 
 		mImageGridView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -162,7 +173,7 @@ public class ImageFragment extends Fragment {
 							Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.max_limit_file) + "  " + MediaChooserConstants.SELECTED_MEDIA_COUNT + " " +  getActivity().getResources().getString(R.string.files), Toast.LENGTH_SHORT).show();
 							return;
 						}
-						
+
 					}
 				}
 
@@ -196,8 +207,12 @@ public class ImageFragment extends Fragment {
 	}
 
 	public void addItem(String item) {
-		MediaModel model = new MediaModel(item, false);
-		mGalleryModelList.add(0, model);
-		mImageAdapter.notifyDataSetChanged();
+		if(mImageAdapter != null){
+			MediaModel model = new MediaModel(item, false);
+			mGalleryModelList.add(0, model);
+			mImageAdapter.notifyDataSetChanged();
+		}else{
+			initPhoneImages();
+		}
 	}
 }

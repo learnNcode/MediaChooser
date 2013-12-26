@@ -31,10 +31,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.RelativeLayout.LayoutParams;
+import android.widget.TextView;
 
-import com.learnNcode.mediachooser.fragment.VideoFragment;
+import com.learnncode.mediachooser.fragment.VideoFragment;
 
 public class MediaGridViewAdapter extends ArrayAdapter<String> {
 

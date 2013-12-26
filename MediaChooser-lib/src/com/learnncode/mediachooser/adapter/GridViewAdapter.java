@@ -15,7 +15,7 @@
  */
 
 
-package com.learnNcode.mediachooser.adapter;
+package com.learnncode.mediachooser.adapter;
 
 import java.util.List;
 
@@ -30,12 +30,12 @@ import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout.LayoutParams;
 
-import com.learnNcode.mediachooser.MediaModel;
-import com.learnNcode.mediachooser.R;
-import com.learnNcode.mediachooser.async.ImageLoadAsync;
-import com.learnNcode.mediachooser.async.MediaAsync;
-import com.learnNcode.mediachooser.async.VideoLoadAsync;
-import com.learnNcode.mediachooser.fragment.VideoFragment;
+import com.learnncode.mediachooser.MediaModel;
+import com.learnncode.mediachooser.R;
+import com.learnncode.mediachooser.async.ImageLoadAsync;
+import com.learnncode.mediachooser.async.MediaAsync;
+import com.learnncode.mediachooser.async.VideoLoadAsync;
+import com.learnncode.mediachooser.fragment.VideoFragment;
 
 public class GridViewAdapter extends ArrayAdapter<MediaModel> {
 	public VideoFragment videoFragment;  

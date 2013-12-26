@@ -15,7 +15,7 @@
  */
 
 
-package com.learnNcode.mediachooser.adapter;
+package com.learnncode.mediachooser.adapter;
 
 import java.util.ArrayList;
 
@@ -30,13 +30,13 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.learnNcode.mediachooser.BucketEntry;
-import com.learnNcode.mediachooser.MediaChooserConstants;
-import com.learnNcode.mediachooser.R;
-import com.learnNcode.mediachooser.async.ImageLoadAsync;
-import com.learnNcode.mediachooser.async.MediaAsync;
-import com.learnNcode.mediachooser.async.VideoLoadAsync;
-import com.learnNcode.mediachooser.fragment.BucketVideoFragment;
+import com.learnncode.mediachooser.BucketEntry;
+import com.learnncode.mediachooser.MediaChooserConstants;
+import com.learnncode.mediachooser.R;
+import com.learnncode.mediachooser.async.ImageLoadAsync;
+import com.learnncode.mediachooser.async.MediaAsync;
+import com.learnncode.mediachooser.async.VideoLoadAsync;
+import com.learnncode.mediachooser.fragment.BucketVideoFragment;
 
 public class BucketGridAdapter extends ArrayAdapter<BucketEntry> {
 

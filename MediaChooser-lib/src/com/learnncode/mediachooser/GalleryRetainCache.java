@@ -1,4 +1,4 @@
-package com.learnNcode.mediachooser;
+package com.learnncode.mediachooser;
 
 public class GalleryRetainCache {
 	private static GalleryRetainCache sSingleton;

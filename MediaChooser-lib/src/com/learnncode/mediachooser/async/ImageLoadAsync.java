@@ -15,14 +15,14 @@
  */
 
 
-package com.learnNcode.mediachooser.async;
+package com.learnncode.mediachooser.async;
 
 import java.io.File;
 
 import android.content.Context;
 import android.widget.ImageView;
 
-import com.learnNcode.mediachooser.R;
+import com.learnncode.mediachooser.R;
 import com.squareup.picasso.Picasso;
 
 public class ImageLoadAsync extends MediaAsync<String,String, String>{

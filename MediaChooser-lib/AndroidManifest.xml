@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.learnNcode.mediachooser"
+    package="com.learnncode.mediachooser"
     android:versionCode="1"
-    android:versionName="1.0.1" >
+    android:versionName="1.0.2" >
 
     <uses-sdk
         android:minSdkVersion="10"
@@ -16,11 +16,11 @@
         android:icon="@drawable/ic_launcher"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.learnNcode.mediachooser.activity.HomeFragmentActivity"
+            android:name="com.learnncode.mediachooser.activity.HomeFragmentActivity"
             android:configChanges="orientation|screenSize" >
         </activity>
         <activity
-            android:name="com.learnNcode.mediachooser.activity.BucketHomeFragmentActivity"
+            android:name="com.learnncode.mediachooser.activity.BucketHomeFragmentActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -30,11 +30,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.learnNcode.mediachooser.fragment.ImageFragment"
+            android:name="com.learnncode.mediachooser.fragment.ImageFragment"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.learnNcode.mediachooser.fragment.VideoFragment"
+            android:name="com.learnncode.mediachooser.fragment.VideoFragment"
             android:screenOrientation="portrait" >
         </activity>
     </application>

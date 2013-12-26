@@ -15,7 +15,7 @@
  */
 
 
-package com.learnNcode.mediachooser.activity;
+package com.learnncode.mediachooser.activity;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -42,11 +42,11 @@ import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.learnNcode.mediachooser.MediaChooser;
-import com.learnNcode.mediachooser.MediaChooserConstants;
-import com.learnNcode.mediachooser.R;
-import com.learnNcode.mediachooser.fragment.BucketImageFragment;
-import com.learnNcode.mediachooser.fragment.BucketVideoFragment;
+import com.learnncode.mediachooser.MediaChooser;
+import com.learnncode.mediachooser.MediaChooserConstants;
+import com.learnncode.mediachooser.R;
+import com.learnncode.mediachooser.fragment.BucketImageFragment;
+import com.learnncode.mediachooser.fragment.BucketVideoFragment;
 
 public class BucketHomeFragmentActivity extends FragmentActivity {
 
@@ -85,7 +85,7 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
 			headerBarCamera.setVisibility(View.GONE);
 		}
 
-		mTabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
+		mTabHost.setup(this, getSupportFragmentManager(), R.id.tabcontent);
 
 
 
@@ -156,7 +156,7 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
 
 					if(imageFragment == null){   
 						BucketImageFragment newImageFragment = new BucketImageFragment();
-						fragmentTransaction.add(android.R.id.tabcontent, newImageFragment, "tab1"); 
+						fragmentTransaction.add(R.id.tabcontent, newImageFragment, "tab1"); 
 
 					}else{
 
@@ -175,7 +175,7 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
 					if(videoFragment == null){
 
 						final BucketVideoFragment newVideoFragment = new BucketVideoFragment();
-						fragmentTransaction.add(android.R.id.tabcontent, newVideoFragment, "tab2");  
+						fragmentTransaction.add(R.id.tabcontent, newVideoFragment, "tab2");  
 
 					}else{
 

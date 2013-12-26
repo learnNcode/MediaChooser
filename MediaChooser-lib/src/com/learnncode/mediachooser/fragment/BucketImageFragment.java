@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.learnNcode.mediachooser.fragment;
+package com.learnncode.mediachooser.fragment;
 
 import java.util.ArrayList;
 
@@ -30,12 +30,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
+import android.widget.Toast;
 
-import com.learnNcode.mediachooser.BucketEntry;
-import com.learnNcode.mediachooser.MediaChooserConstants;
-import com.learnNcode.mediachooser.R;
-import com.learnNcode.mediachooser.activity.HomeFragmentActivity;
-import com.learnNcode.mediachooser.adapter.BucketGridAdapter;
+import com.learnncode.mediachooser.BucketEntry;
+import com.learnncode.mediachooser.MediaChooserConstants;
+import com.learnncode.mediachooser.R;
+import com.learnncode.mediachooser.activity.HomeFragmentActivity;
+import com.learnncode.mediachooser.adapter.BucketGridAdapter;
 
 public class BucketImageFragment extends Fragment{
 	private final String TAG = "BucketImageActivity";
@@ -52,7 +53,9 @@ public class BucketImageFragment extends Fragment{
 
 	private View mView;
 	private GridView mGridView;
-	private BucketGridAdapter bucketAdapter;
+	private BucketGridAdapter mBucketAdapter;
+
+	private Cursor mCursor;
 
 
 
@@ -69,6 +72,9 @@ public class BucketImageFragment extends Fragment{
 			init();
 		}else{
 			((ViewGroup) mView.getParent()).removeView(mView);
+			if(mBucketAdapter == null){
+				Toast.makeText(getActivity(), getActivity().getString(R.string.no_media_file_available), Toast.LENGTH_SHORT).show();
+			}
 		}
 		return mView;
 	}
@@ -76,21 +82,25 @@ public class BucketImageFragment extends Fragment{
 
 	private void init(){
 		final String orderBy = MediaStore.Images.Media.DATE_TAKEN;
-		Cursor cursor = getActivity().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, PROJECTION_BUCKET, null, null, orderBy + " DESC");
+		 mCursor = getActivity().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, PROJECTION_BUCKET, null, null, orderBy + " DESC");
 		ArrayList<BucketEntry> buffer = new ArrayList<BucketEntry>();
 		try {
-			while (cursor.moveToNext()) {
+			while (mCursor.moveToNext()) {
 				BucketEntry entry = new BucketEntry(
-						cursor.getInt(INDEX_BUCKET_ID),
-						cursor.getString(INDEX_BUCKET_NAME),cursor.getString(INDEX_BUCKET_URL));
+						mCursor.getInt(INDEX_BUCKET_ID),
+						mCursor.getString(INDEX_BUCKET_NAME),mCursor.getString(INDEX_BUCKET_URL));
 
 				if (! buffer.contains(entry)) {
 					buffer.add(entry);
 				}
 			}
 
-			bucketAdapter = new BucketGridAdapter(getActivity(), 0, buffer, false);
-			mGridView.setAdapter(bucketAdapter);
+			if(mCursor.getCount() > 0){
+				mBucketAdapter = new BucketGridAdapter(getActivity(), 0, buffer, false);
+				mGridView.setAdapter(mBucketAdapter);
+			}else{
+				Toast.makeText(getActivity(), getActivity().getString(R.string.no_media_file_available), Toast.LENGTH_SHORT).show();
+			}
 
 			mGridView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -108,13 +118,13 @@ public class BucketImageFragment extends Fragment{
 			});
 
 		} finally {
-			cursor.close();
+			mCursor.close();
 		}
 	}
 
 	public BucketGridAdapter getAdapter() {
-		return	bucketAdapter;
+		return	mBucketAdapter;
 	}
-	
+
 
 }

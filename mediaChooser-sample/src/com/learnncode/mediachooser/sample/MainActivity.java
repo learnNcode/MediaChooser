@@ -30,9 +30,9 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import com.learnNcode.mediachooser.MediaChooser;
-import com.learnNcode.mediachooser.activity.BucketHomeFragmentActivity;
-import com.learnNcode.mediachooser.activity.HomeFragmentActivity;
+import com.learnncode.mediachooser.MediaChooser;
+import com.learnncode.mediachooser.activity.BucketHomeFragmentActivity;
+import com.learnncode.mediachooser.activity.HomeFragmentActivity;
 
 public class MainActivity extends Activity {
 

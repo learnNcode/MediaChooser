@@ -15,7 +15,7 @@
  */
 
 
-package com.learnNcode.mediachooser;
+package com.learnncode.mediachooser;
 
 public class BucketEntry {
 	public String bucketName;

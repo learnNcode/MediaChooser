@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.learnNcode.mediachooser.activity;
+package com.learnncode.mediachooser.activity;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -39,11 +39,11 @@ import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.learnNcode.mediachooser.MediaChooser;
-import com.learnNcode.mediachooser.MediaChooserConstants;
-import com.learnNcode.mediachooser.R;
-import com.learnNcode.mediachooser.fragment.ImageFragment;
-import com.learnNcode.mediachooser.fragment.VideoFragment;
+import com.learnncode.mediachooser.MediaChooser;
+import com.learnncode.mediachooser.MediaChooserConstants;
+import com.learnncode.mediachooser.R;
+import com.learnncode.mediachooser.fragment.ImageFragment;
+import com.learnncode.mediachooser.fragment.VideoFragment;
 
 public class HomeFragmentActivity extends FragmentActivity implements ImageFragment.OnImageSelectedListener, 
 VideoFragment.OnVideoSelectedListener{
@@ -73,7 +73,7 @@ VideoFragment.OnVideoSelectedListener{
 
 
 
-		mTabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
+		mTabHost.setup(this, getSupportFragmentManager(), R.id.tabcontent);
 		headerBarBack.setOnClickListener(clickListener);
 		headerBarCamera.setOnClickListener(clickListener);
 		headerBarDone.setOnClickListener(clickListener);
@@ -178,8 +178,10 @@ VideoFragment.OnVideoSelectedListener{
 							fragmentTransaction.hide(imageFragment);
 						}
 
-						fragmentTransaction.show(videoFragment);   
-						videoFragment.getAdapter().notifyDataSetChanged();
+						fragmentTransaction.show(videoFragment); 
+						if(videoFragment.getAdapter() != null){
+							videoFragment.getAdapter().notifyDataSetChanged();
+						}
 					}
 				}
 				fragmentTransaction.commit();         
