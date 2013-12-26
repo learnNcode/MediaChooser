@@ -106,10 +106,6 @@ VideoFragment.OnVideoSelectedListener{
 		}else{
 
 			if(MediaChooserConstants.showVideo){
-				headerBarTitle.setText(getResources().getString(R.string.video));
-				headerBarCamera.setBackgroundDrawable(getResources().getDrawable(R.drawable.selector_video_button));
-				headerBarCamera.setTag(getResources().getString(R.string.video));
-
 				mTabHost.addTab(mTabHost.newTabSpec("tab2").setIndicator(getResources().getString(R.string.video) + "      "), VideoFragment.class, null);
 			}
 
@@ -121,6 +117,11 @@ VideoFragment.OnVideoSelectedListener{
 				mTabHost.addTab(mTabHost.newTabSpec("tab1").setIndicator(getResources().getString(R.string.image) + "      "), ImageFragment.class, null);
 			}
 
+			if(MediaChooserConstants.showVideo){
+				headerBarTitle.setText(getResources().getString(R.string.video));
+				headerBarCamera.setBackgroundDrawable(getResources().getDrawable(R.drawable.selector_video_button));
+				headerBarCamera.setTag(getResources().getString(R.string.video));
+			}
 		}
 
 		for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {
