@@ -38,6 +38,7 @@ Add following code to the application node of your application's manifest file
 ChangeLog
 -----------------------------------
 <b>Version 1.0.3 </b>
+
    __1]__ Fixed video icon visibility when video tab selected.
 
 <b>Version 1.0.2 </b>
