@@ -37,9 +37,15 @@ Add following code to the application node of your application's manifest file
 
 ChangeLog
 -----------------------------------
-__1]__ Fixed nexus 10 crash.
+<b>Version 1.0.2 </b>
 
-__2]__ Added helper methods for ease.
+  __1]__ Fixed blank image tab or video tab issue.
+
+<b>Version 1.0.1</b>
+
+  __1]__ Fixed nexus 10 crash.
+
+  __2]__ Added helper methods for ease.
 
 
 What does this library do ?
