@@ -39,7 +39,7 @@ ChangeLog
 -----------------------------------
 <b>Version 1.0.4 </b>
 
-   __1]__ Fixed requires android tab content.
+   __1]__ Fixed tab content issue.
 
 <b>Version 1.0.3 </b>
 
