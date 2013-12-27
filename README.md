@@ -25,12 +25,12 @@ Add following permission to your applications manifest file.
 Add following code to the application node of your application's manifest file
 ```xml
 <activity
-    android:name="com.learnNcode.mediachooser.activity.BucketHomeFragmentActivity"
+    android:name="com.learnncode.mediachooser.activity.BucketHomeFragmentActivity"
     android:screenOrientation="portrait" >
 </activity>
 
 <activity
-    android:name="com.learnNcode.mediachooser.activity.HomeFragmentActivity"
+    android:name="com.learnncode.mediachooser.activity.HomeFragmentActivity"
     android:screenOrientation="portrait" >
 </activity>
 ```
