@@ -28,7 +28,12 @@
                 android:orientation="horizontal" />
 
             <FrameLayout
-                android:id="@+id/tabcontent"
+                android:id="@android:id/tabcontent"
+                android:layout_width="0dp"
+                android:layout_height="0dp" />
+            
+            <FrameLayout
+                android:id="@+id/realTabcontent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </LinearLayout>
