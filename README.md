@@ -37,6 +37,10 @@ Add following code to the application node of your application's manifest file
 
 ChangeLog
 -----------------------------------
+<b>Version 1.0.4 </b>
+
+   __1]__ Fixed requires android tab content.
+
 <b>Version 1.0.3 </b>
 
    __1]__ Fixed video icon visibility when video tab selected.
