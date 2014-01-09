@@ -58,7 +58,7 @@ ChangeLog
 
 What does this library do ?
 -----------------------------------
-Useful library for selecting images and videos from sd-card. The library can be used to disply images & videos in  file view or folder view.
+Useful library for selecting images and videos from sd-card. The library can be used to display images & videos in  file view or folder view.
 File view shows all files whereas Folder view shows files categorized.
 All items are sorted according to date-time with latest item showing first.
 
