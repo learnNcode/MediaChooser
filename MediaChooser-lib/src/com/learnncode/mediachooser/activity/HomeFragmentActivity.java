@@ -20,8 +20,10 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -44,6 +46,7 @@ import com.learnncode.mediachooser.MediaChooserConstants;
 import com.learnncode.mediachooser.R;
 import com.learnncode.mediachooser.fragment.ImageFragment;
 import com.learnncode.mediachooser.fragment.VideoFragment;
+
 
 public class HomeFragmentActivity extends FragmentActivity implements ImageFragment.OnImageSelectedListener, 
 VideoFragment.OnVideoSelectedListener{
@@ -87,7 +90,8 @@ VideoFragment.OnVideoSelectedListener{
 
 			if(getIntent().getBooleanExtra("image", false)){
 				headerBarTitle.setText(getResources().getString(R.string.image));
-				headerBarCamera.setBackgroundDrawable(getResources().getDrawable(R.drawable.selector_camera_button));
+				setHeaderBarCameraBackground(getResources().getDrawable(R.drawable.selector_camera_button));
+			
 				headerBarCamera.setTag(getResources().getString(R.string.image));
 
 				Bundle bundle = new Bundle();
@@ -96,7 +100,7 @@ VideoFragment.OnVideoSelectedListener{
 
 			}else{
 				headerBarTitle.setText(getResources().getString(R.string.video));
-				headerBarCamera.setBackgroundDrawable(getResources().getDrawable(R.drawable.selector_video_button));
+				setHeaderBarCameraBackground(getResources().getDrawable(R.drawable.selector_video_button));
 				headerBarCamera.setTag(getResources().getString(R.string.video));
 
 				Bundle bundle = new Bundle();
@@ -111,7 +115,7 @@ VideoFragment.OnVideoSelectedListener{
 
 			if(MediaChooserConstants.showImage){
 				headerBarTitle.setText(getResources().getString(R.string.image));
-				headerBarCamera.setBackgroundDrawable(getResources().getDrawable(R.drawable.selector_camera_button));
+				setHeaderBarCameraBackground(getResources().getDrawable(R.drawable.selector_camera_button));
 				headerBarCamera.setTag(getResources().getString(R.string.image));
 
 				mTabHost.addTab(mTabHost.newTabSpec("tab1").setIndicator(getResources().getString(R.string.image) + "      "), ImageFragment.class, null);
@@ -119,7 +123,7 @@ VideoFragment.OnVideoSelectedListener{
 
 			if(MediaChooserConstants.showVideo){
 				headerBarTitle.setText(getResources().getString(R.string.video));
-				headerBarCamera.setBackgroundDrawable(getResources().getDrawable(R.drawable.selector_video_button));
+				setHeaderBarCameraBackground(getResources().getDrawable(R.drawable.selector_video_button));
 				headerBarCamera.setTag(getResources().getString(R.string.video));
 			}
 		}
@@ -158,7 +162,7 @@ VideoFragment.OnVideoSelectedListener{
 				if(tabId.equalsIgnoreCase("tab1")){
 
 					headerBarTitle.setText(getResources().getString(R.string.image));
-					headerBarCamera.setBackgroundDrawable(getResources().getDrawable(R.drawable.selector_camera_button));
+					setHeaderBarCameraBackground(getResources().getDrawable(R.drawable.selector_camera_button));
 					headerBarCamera.setTag(getResources().getString(R.string.image));
 
 					if(imageFragment != null){   
@@ -170,7 +174,7 @@ VideoFragment.OnVideoSelectedListener{
 					}
 				}else{ 
 					headerBarTitle.setText(getResources().getString(R.string.video));
-					headerBarCamera.setBackgroundDrawable(getResources().getDrawable(R.drawable.selector_video_button));
+					setHeaderBarCameraBackground(getResources().getDrawable(R.drawable.selector_video_button));
 					headerBarCamera.setTag(getResources().getString(R.string.video));
 
 					if(videoFragment != null){
@@ -367,6 +371,17 @@ VideoFragment.OnVideoSelectedListener{
 
 		}else{
 			((TextView)mTabHost.getTabWidget().getChildAt(0).findViewById(android.R.id.title)).setText(getResources().getString(R.string.video));
+		}
+	}
+	
+	@SuppressLint("NewApi")
+	@SuppressWarnings("deprecation")
+	private void setHeaderBarCameraBackground(Drawable drawable) {
+		int sdk = android.os.Build.VERSION.SDK_INT;
+		if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+			headerBarCamera.setBackgroundDrawable(drawable);
+		} else {
+			headerBarCamera.setBackground(drawable);
 		}
 	}
 }

@@ -19,9 +19,7 @@ package com.learnncode.mediachooser.adapter;
 
 import java.util.List;
 
-import android.app.Activity;
 import android.content.Context;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,13 +42,15 @@ public class GridViewAdapter extends ArrayAdapter<MediaModel> {
 	private List<MediaModel> mGalleryModelList;
 	private int mWidth;
 	private boolean mIsFromVideo;
-
+	LayoutInflater viewInflater;
+	
 
 	public GridViewAdapter(Context context, int resource, List<MediaModel> categories, boolean isFromVideo) {
 		super(context, resource, categories);
 		mGalleryModelList = categories;
 		mContext          = context;
 		mIsFromVideo      = isFromVideo;
+		viewInflater = LayoutInflater.from(mContext);
 	}
 
 	public int getCount() {
@@ -74,11 +74,8 @@ public class GridViewAdapter extends ArrayAdapter<MediaModel> {
 
 		if (convertView == null) {
 
-			Display display = ((Activity)mContext).getWindowManager().getDefaultDisplay(); 
-			mWidth = display.getWidth();  // deprecated
-
-			LayoutInflater viewInflater;
-			viewInflater = LayoutInflater.from(getContext());
+			mWidth = mContext.getResources().getDisplayMetrics().widthPixels;  
+			
 			convertView = viewInflater.inflate(R.layout.view_grid_item_media_chooser, parent, false);
 
 			holder = new ViewHolder();

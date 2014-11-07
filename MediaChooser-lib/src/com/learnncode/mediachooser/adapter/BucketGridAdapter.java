@@ -19,9 +19,7 @@ package com.learnncode.mediachooser.adapter;
 
 import java.util.ArrayList;
 
-import android.app.Activity;
 import android.content.Context;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,12 +44,15 @@ public class BucketGridAdapter extends ArrayAdapter<BucketEntry> {
 	private ArrayList<BucketEntry> mBucketEntryList;
 	private boolean mIsFromVideo;
 	private int mWidth;
+	LayoutInflater viewInflater;
+	
 
 	public BucketGridAdapter(Context context, int resource, ArrayList<BucketEntry> categories, boolean isFromVideo) {
 		super(context, resource, categories);
 		mBucketEntryList = categories;
 		mContext         = context;
 		mIsFromVideo     = isFromVideo;
+		viewInflater = LayoutInflater.from(mContext);
 	}
 
 	public int getCount() {
@@ -92,11 +93,8 @@ public class BucketGridAdapter extends ArrayAdapter<BucketEntry> {
 
 		if (convertView == null) {
 
-			Display display = ((Activity)mContext).getWindowManager().getDefaultDisplay(); 
-			mWidth = display.getWidth();  // deprecated
+			mWidth = mContext.getResources().getDisplayMetrics().widthPixels;  
 
-			LayoutInflater viewInflater;
-			viewInflater = LayoutInflater.from(mContext);
 			convertView  = viewInflater.inflate(R.layout.view_grid_bucket_item_media_chooser, parent, false);
 
 			holder = new ViewHolder();

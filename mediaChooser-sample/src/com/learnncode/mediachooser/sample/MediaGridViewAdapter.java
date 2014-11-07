@@ -20,12 +20,11 @@ package com.learnncode.mediachooser.sample;
 import java.io.File;
 import java.util.List;
 
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +41,7 @@ public class MediaGridViewAdapter extends ArrayAdapter<String> {
 
 	private Context mContext;
 	private List<String> mediaFilePathList;
-
+	LayoutInflater viewInflater;
 	private int mWidth;
 
 
@@ -50,6 +49,7 @@ public class MediaGridViewAdapter extends ArrayAdapter<String> {
 		super(context, resource, filePathList);
 		mediaFilePathList = filePathList;
 		mContext          = context;
+		viewInflater = LayoutInflater.from(mContext);
 	}
 
 	public int getCount() {
@@ -76,13 +76,13 @@ public class MediaGridViewAdapter extends ArrayAdapter<String> {
 	}
 
 
-
-
 	@Override
 	public long getItemId(int position) {
 		return position;
 	}
 
+	@SuppressWarnings("deprecation")
+	@SuppressLint("NewApi")
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -90,12 +90,7 @@ public class MediaGridViewAdapter extends ArrayAdapter<String> {
 
 		if (convertView == null) {
 
-			Display display = ((Activity)mContext).getWindowManager().getDefaultDisplay(); 
-			mWidth = display.getWidth(); 
-
-			LayoutInflater viewInflater;
-			viewInflater = LayoutInflater.from(mContext);
-
+			mWidth = mContext.getResources().getDisplayMetrics().widthPixels;   
 			convertView = viewInflater.inflate(R.layout.view_grid_item, parent, false);
 			holder = new ViewHolder();
 			holder.imageView = (ImageView) convertView.findViewById(R.id.imageViewFromGridItemRowView);
@@ -120,7 +115,13 @@ public class MediaGridViewAdapter extends ArrayAdapter<String> {
 			if(mediaFile.getPath().contains("mp4") || mediaFile.getPath().contains("wmv") ||
 					mediaFile.getPath().contains("avi") || mediaFile.getPath().contains("3gp") ){
 				holder.imageView.setImageBitmap(null);
-				holder.imageView.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.ic_video));
+
+				int sdk = android.os.Build.VERSION.SDK_INT;
+				if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+					holder.imageView.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.ic_video));
+				} else {
+					holder.imageView.setBackground(mContext.getResources().getDrawable(R.drawable.ic_video));
+				}
 
 			}else{
 				Options options = new Options();
@@ -140,7 +141,6 @@ public class MediaGridViewAdapter extends ArrayAdapter<String> {
 	class ViewHolder {
 		ImageView imageView;
 		TextView nameTextView;
-
 	}
 
 }

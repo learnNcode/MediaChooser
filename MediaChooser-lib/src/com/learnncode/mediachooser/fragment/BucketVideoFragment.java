@@ -41,7 +41,6 @@ import com.learnncode.mediachooser.activity.HomeFragmentActivity;
 import com.learnncode.mediachooser.adapter.BucketGridAdapter;
 
 public class BucketVideoFragment extends Fragment{
-	private final String TAG = "BucketVideoFragment";
 
 	// The indices should match the following projections.
 	private final int INDEX_BUCKET_ID 		= 0;
@@ -77,7 +76,6 @@ public class BucketVideoFragment extends Fragment{
 				Toast.makeText(getActivity(), getActivity().getString(R.string.no_media_file_available), Toast.LENGTH_SHORT).show();
 			}
 		}
-
 		return mView;
 	}
 

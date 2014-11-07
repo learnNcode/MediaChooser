@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
@@ -31,6 +32,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.GridView;
 import android.widget.Toast;
 
@@ -147,6 +149,21 @@ public class ImageFragment extends Fragment {
 		}else{
 			Toast.makeText(getActivity(), getActivity().getString(R.string.no_media_file_available), Toast.LENGTH_SHORT).show();
 		}
+		
+		mImageGridView.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				
+				GridViewAdapter adapter = (GridViewAdapter) parent.getAdapter();
+				MediaModel galleryModel = (MediaModel) adapter.getItem(position);
+				File file = new File(galleryModel.url);
+				Intent intent = new Intent(Intent.ACTION_VIEW);
+				intent.setDataAndType(Uri.fromFile(file), "image/*");
+				startActivity(intent);
+				return true;
+			}
+		});
 
 		mImageGridView.setOnItemClickListener(new OnItemClickListener() {
 

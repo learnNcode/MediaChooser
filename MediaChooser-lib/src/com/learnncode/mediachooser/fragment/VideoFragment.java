@@ -35,6 +35,7 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.GridView;
 import android.widget.Toast;
 
@@ -52,7 +53,6 @@ public class VideoFragment extends Fragment implements OnScrollListener {
 	private GridView mVideoGridView;
 	private Cursor mCursor;
 	private int mDataColumnIndex;
-	private boolean mIsScrolling = false;
 	private ArrayList<String> mSelectedItems = new ArrayList<String>();
 	private ArrayList<MediaModel> mGalleryModelList;
 	private View mView;
@@ -146,8 +146,6 @@ public class VideoFragment extends Fragment implements OnScrollListener {
 		int count = mCursor.getCount();
 
 		if(count > 0){
-
-
 			mDataColumnIndex = mCursor.getColumnIndex(MEDIA_DATA);
 
 			//move position to first element
@@ -169,6 +167,22 @@ public class VideoFragment extends Fragment implements OnScrollListener {
 			Toast.makeText(getActivity(), getActivity().getString(R.string.no_media_file_available), Toast.LENGTH_SHORT).show();
 
 		}
+
+
+		mVideoGridView.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				GridViewAdapter adapter = (GridViewAdapter) parent.getAdapter();
+				MediaModel galleryModel = (MediaModel) adapter.getItem(position);
+				File file = new File(galleryModel.url);
+				Intent intent = new Intent(Intent.ACTION_VIEW);
+				intent.setDataAndType(Uri.fromFile(file), "video/*");
+				startActivity(intent);
+				return false;
+			}
+		});
+
 		mVideoGridView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -254,9 +268,8 @@ public class VideoFragment extends Fragment implements OnScrollListener {
 			// to lift its finger off the screen in order to
 			// download.
 			if (scrollState == SCROLL_STATE_FLING) {
-				mIsScrolling = true;
+				//chk
 			} else {
-				mIsScrolling = false;
 				mVideoAdapter.notifyDataSetChanged();
 			}
 		}
