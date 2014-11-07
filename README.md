@@ -37,6 +37,15 @@ Add following code to the application node of your application's manifest file
 
 ChangeLog
 -----------------------------------
+
+<b>Version 1.0.5 </b>
+
+   __1]__ Updated picasso jar.
+   
+   __2]__ Preview file on item longpress.
+   
+   __3]__ Removed deprecated code.
+
 <b>Version 1.0.4 </b>
 
    __1]__ Fixed tab content issue.
@@ -69,13 +78,14 @@ Usage
 
 To display images and videos according to:
     
-__1]__Folders 
+    
+__1]__ Folders 
 ```java
 Intent intent = new Intent(MainActivity.this, BucketHomeFragmentActivity.class);
 startActivity(intent);
 ```
                
-__2]__Files  
+__2]__ Files  
 ```java
 Intent intent = new Intent(MainActivity.this, HomeFragmentActivity.class);
 startActivity(intent);
@@ -94,6 +104,7 @@ Example:
 IntentFilter imageIntentFilter = new IntentFilter(MediaChooser.IMAGE_SELECTED_ACTION_FROM_MEDIA_CHOOSER);
 registerReceiver(imageBroadcastReceiver, imageIntentFilter);
 ```
+        
         
 __2]__ For videos you have to register a broadcast with 
     `MediaChooser.VIDEO_SELECTED_ACTION_FROM_MEDIA_CHOOSER` action.
@@ -119,7 +130,7 @@ MediaChooser.setVideoSize(10); // Default set to 20mb.
 MediaChooser.setImageSize(10); // Default set to 20mb.
 ```
  
-__3]__setSelectionLimit : To set number of items that can be selected.
+__3]__ setSelectionLimit : To set number of items that can be selected.
         example: 
 ```java         
 MediaChooser.setSelectionLimit(10);  //default set to 100.
@@ -175,6 +186,7 @@ License
 Thank You
 -----------------------------------
 
-  If you like our work say a hi :)
+  If you like our work say a Hi :)
+  
   <br>
   Happy Coding Happy Learning.
