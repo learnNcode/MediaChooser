@@ -23,6 +23,7 @@ import java.util.Date;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -34,7 +35,9 @@ import android.support.v4.app.FragmentTabHost;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TabHost.OnTabChangeListener;
@@ -56,7 +59,7 @@ VideoFragment.OnVideoSelectedListener{
 	private TextView headerBarTitle;
 	private ImageView headerBarCamera;
 	private ImageView headerBarBack;
-	private ImageView headerBarDone;
+	private TextView headerBarDone;
 
 	private static Uri fileUri;
 
@@ -65,13 +68,13 @@ VideoFragment.OnVideoSelectedListener{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		requestWindowFeature(Window.FEATURE_NO_TITLE); 
 		setContentView(R.layout.activity_home_media_chooser);
 
 		headerBarTitle  = (TextView)findViewById(R.id.titleTextViewFromMediaChooserHeaderBar);
 		headerBarCamera = (ImageView)findViewById(R.id.cameraImageViewFromMediaChooserHeaderBar);
 		headerBarBack   = (ImageView)findViewById(R.id.backArrowImageViewFromMediaChooserHeaderView);
-		headerBarDone   = (ImageView)findViewById(R.id.doneImageViewFromMediaChooserHeaderView);
+		headerBarDone   = (TextView)findViewById(R.id.doneTextViewViewFromMediaChooserHeaderView);
 		mTabHost        = (FragmentTabHost) findViewById(android.R.id.tabhost);
 
 
@@ -91,12 +94,12 @@ VideoFragment.OnVideoSelectedListener{
 			if(getIntent().getBooleanExtra("image", false)){
 				headerBarTitle.setText(getResources().getString(R.string.image));
 				setHeaderBarCameraBackground(getResources().getDrawable(R.drawable.selector_camera_button));
-			
+
 				headerBarCamera.setTag(getResources().getString(R.string.image));
 
 				Bundle bundle = new Bundle();
 				bundle.putString("name", getIntent().getStringExtra("name"));
-				mTabHost.addTab(mTabHost.newTabSpec("tab1").setIndicator(getResources().getString(R.string.image) + "     "), ImageFragment.class, bundle);
+				mTabHost.addTab(mTabHost.newTabSpec("tab1").setIndicator(getResources().getString(R.string.images_tab) + "     "), ImageFragment.class, bundle);
 
 			}else{
 				headerBarTitle.setText(getResources().getString(R.string.video));
@@ -105,12 +108,12 @@ VideoFragment.OnVideoSelectedListener{
 
 				Bundle bundle = new Bundle();
 				bundle.putString("name", getIntent().getStringExtra("name"));
-				mTabHost.addTab(mTabHost.newTabSpec("tab2").setIndicator(getResources().getString(R.string.video) + "      "), VideoFragment.class, bundle);
+				mTabHost.addTab(mTabHost.newTabSpec("tab2").setIndicator(getResources().getString(R.string.videos_tab) + "      "), VideoFragment.class, bundle);
 			}
 		}else{
 
 			if(MediaChooserConstants.showVideo){
-				mTabHost.addTab(mTabHost.newTabSpec("tab2").setIndicator(getResources().getString(R.string.video) + "      "), VideoFragment.class, null);
+				mTabHost.addTab(mTabHost.newTabSpec("tab2").setIndicator(getResources().getString(R.string.videos_tab) + "      "), VideoFragment.class, null);
 			}
 
 			if(MediaChooserConstants.showImage){
@@ -118,7 +121,7 @@ VideoFragment.OnVideoSelectedListener{
 				setHeaderBarCameraBackground(getResources().getDrawable(R.drawable.selector_camera_button));
 				headerBarCamera.setTag(getResources().getString(R.string.image));
 
-				mTabHost.addTab(mTabHost.newTabSpec("tab1").setIndicator(getResources().getString(R.string.image) + "      "), ImageFragment.class, null);
+				mTabHost.addTab(mTabHost.newTabSpec("tab1").setIndicator(getResources().getString(R.string.images_tab) + "      "), ImageFragment.class, null);
 			}
 
 			if(MediaChooserConstants.showVideo){
@@ -138,14 +141,24 @@ VideoFragment.OnVideoSelectedListener{
 				params.addRule(RelativeLayout.CENTER_VERTICAL);
 				params.height = RelativeLayout.LayoutParams.MATCH_PARENT;
 				params.width  = RelativeLayout.LayoutParams.WRAP_CONTENT;
-				mTabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title).setLayoutParams(params);
+				textView.setLayoutParams(params);
 
 			}else if(textView.getLayoutParams() instanceof LinearLayout.LayoutParams){
 				LinearLayout.LayoutParams params = (android.widget.LinearLayout.LayoutParams) textView.getLayoutParams();
 				params.gravity = Gravity.CENTER;
-				mTabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title).setLayoutParams(params);
+				textView.setLayoutParams(params);
 			}
+			textView.setTextColor(getResources().getColor(R.color.tabs_title_color));
+			textView.setTextSize(convertDipToPixels(10));
 
+		}
+
+		if((mTabHost.getTabWidget().getChildAt(0) != null)){
+			((TextView)(mTabHost.getTabWidget().getChildAt(0).findViewById(android.R.id.title))).setTextColor(Color.WHITE);
+		}
+		
+		if((mTabHost.getTabWidget().getChildAt(1) != null)){
+			((TextView)(mTabHost.getTabWidget().getChildAt(1).findViewById(android.R.id.title))).setTextColor(getResources().getColor(R.color.headerbar_selected_tab_color));
 		}
 
 		mTabHost.setOnTabChangedListener(new OnTabChangeListener() {
@@ -172,6 +185,9 @@ VideoFragment.OnVideoSelectedListener{
 						}
 						fragmentTransaction.show(imageFragment); 
 					}
+					((TextView)(mTabHost.getTabWidget().getChildAt(0).findViewById(android.R.id.title))).setTextColor(getResources().getColor(R.color.headerbar_selected_tab_color));
+					((TextView)(mTabHost.getTabWidget().getChildAt(1).findViewById(android.R.id.title))).setTextColor(Color.WHITE);
+
 				}else{ 
 					headerBarTitle.setText(getResources().getString(R.string.video));
 					setHeaderBarCameraBackground(getResources().getDrawable(R.drawable.selector_video_button));
@@ -188,10 +204,21 @@ VideoFragment.OnVideoSelectedListener{
 							videoFragment.getAdapter().notifyDataSetChanged();
 						}
 					}
+					((TextView)(mTabHost.getTabWidget().getChildAt(0).findViewById(android.R.id.title))).setTextColor(Color.WHITE);
+					((TextView)(mTabHost.getTabWidget().getChildAt(1).findViewById(android.R.id.title))).setTextColor(getResources().getColor(R.color.headerbar_selected_tab_color));
 				}
+
 				fragmentTransaction.commit();         
 			}
 		});
+
+		RelativeLayout.LayoutParams params = (android.widget.RelativeLayout.LayoutParams) headerBarCamera.getLayoutParams();
+		params.height = convertDipToPixels(40);
+		params.width  = convertDipToPixels(40);
+		headerBarCamera.setLayoutParams(params);
+		headerBarCamera.setScaleType(ScaleType.CENTER_INSIDE);
+		headerBarCamera.setPadding(convertDipToPixels(15), convertDipToPixels(15), convertDipToPixels(15), convertDipToPixels(15));
+
 	}
 
 	OnClickListener clickListener = new OnClickListener() {
@@ -373,7 +400,7 @@ VideoFragment.OnVideoSelectedListener{
 			((TextView)mTabHost.getTabWidget().getChildAt(0).findViewById(android.R.id.title)).setText(getResources().getString(R.string.video));
 		}
 	}
-	
+
 	@SuppressLint("NewApi")
 	@SuppressWarnings("deprecation")
 	private void setHeaderBarCameraBackground(Drawable drawable) {
@@ -384,4 +411,9 @@ VideoFragment.OnVideoSelectedListener{
 			headerBarCamera.setBackground(drawable);
 		}
 	}
+
+	public int convertDipToPixels(float dips){
+		return (int) (dips * HomeFragmentActivity.this.getResources().getDisplayMetrics().density + 0.5f);
+	}
+
 }

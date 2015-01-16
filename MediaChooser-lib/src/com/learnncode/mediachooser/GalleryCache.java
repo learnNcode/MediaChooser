@@ -21,11 +21,9 @@ public class GalleryCache {
 	private LruCache<String, Bitmap> mBitmapCache;
 	private ArrayList<String> mCurrentTasks;
 	private int mMaxWidth;
-	private int mMaxHeight;
 
 	public GalleryCache(int size, int maxWidth, int maxHeight) {
 		mMaxWidth = maxWidth;
-		mMaxHeight = maxHeight;
 
 		mBitmapCache = new LruCache<String, Bitmap>(size) {
 			@Override
@@ -82,7 +80,7 @@ public class GalleryCache {
 		if (bitmap != null) {
 			imageView.setImageBitmap(bitmap);
 		} else {
-			imageView.setImageResource(R.drawable.loading);
+			imageView.setImageResource(R.drawable.ic_loading);
 			//			imageView.setImageResource(R.drawable.transprent_drawable);
 			if (!isScrolling && !mCurrentTasks.contains(imageKey)) {
 				if(mainActivity instanceof VideoFragment){

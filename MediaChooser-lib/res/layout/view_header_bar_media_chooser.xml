@@ -4,56 +4,50 @@
     android:layout_width="match_parent"
     android:layout_height="48dp"
     android:layout_alignParentTop="true"
-    android:background="@android:color/background_dark" >
+    android:background="@color/headerbar_color" >
 
     <ImageView
         android:id="@+id/backArrowImageViewFromMediaChooserHeaderView"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="10dp"
         android:adjustViewBounds="true"
         android:contentDescription="@null"
-        android:scaleType="centerInside"
-        android:src="@drawable/ic_back_from_media_chooser_header_bar"
-        android:visibility="visible" />
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_navigation_left_from_media_chooser_header_bar" />
 
     <TextView
         android:id="@+id/titleTextViewFromMediaChooserHeaderBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
         android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/backArrowImageViewFromMediaChooserHeaderView"
         android:text="@string/video"
-        android:textColor="@android:color/white"
-        android:textStyle="bold" />
+        android:textColor="@color/headerbar_title_color"
+        android:textSize="25sp" />
 
-    <ImageView
-        android:id="@+id/doneImageViewFromMediaChooserHeaderView"
-        android:layout_width="45dp"
-        android:layout_height="match_parent"
+    <TextView
+        android:id="@+id/doneTextViewViewFromMediaChooserHeaderView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_centerInParent="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="3dp"
-        android:adjustViewBounds="true"
-        android:padding="10dp"
-        android:contentDescription="@null"
-        android:scaleType="centerInside"
-        android:src="@drawable/ic_selection_done_media_chooser" />
+        android:layout_marginRight="5dp"
+        android:text="@string/done"
+        android:textColor="@color/headerbar_title_color"
+        android:textSize="23sp" />
 
     <ImageView
         android:id="@+id/cameraImageViewFromMediaChooserHeaderBar"
-        android:layout_width="32dp"
-        android:layout_height="24dp"
+        android:layout_width="45dp"
+        android:layout_height="fill_parent"
         android:layout_centerInParent="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp"
-        android:layout_toLeftOf="@id/doneImageViewFromMediaChooserHeaderView"
+        android:layout_toLeftOf="@id/doneTextViewViewFromMediaChooserHeaderView"
         android:adjustViewBounds="true"
         android:contentDescription="@null"
-        android:scaleType="centerCrop"
-         />
+        android:scaleType="centerInside" />
 
 </RelativeLayout>

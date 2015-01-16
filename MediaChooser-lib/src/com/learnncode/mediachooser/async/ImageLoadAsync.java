@@ -48,7 +48,7 @@ public class ImageLoadAsync extends MediaAsync<String,String, String>{
 		Picasso.with(mContext)
 		.load(new File(result))
 		.resize(mWidth, mWidth)
-		.centerCrop().placeholder(R.drawable.loading)
+		.centerCrop().placeholder(R.drawable.ic_loading)
 		.into(mImageView);
 
 	}

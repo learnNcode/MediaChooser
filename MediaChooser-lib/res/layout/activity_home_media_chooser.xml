@@ -5,16 +5,17 @@
 
     <include
         android:id="@+id/meadiaChooserHeaderBar"
-        android:layout_above="@android:id/tabhost"
-        layout="@layout/view_header_bar_media_chooser"
-        android:visibility="visible" >
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/view_header_bar_media_chooser" >
     </include>
 
     <android.support.v4.app.FragmentTabHost
         android:id="@android:id/tabhost"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/meadiaChooserHeaderBar" >
+        android:layout_below="@id/meadiaChooserHeaderBar"
+        android:background="@color/tabs_color" >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,7 +32,7 @@
                 android:id="@android:id/tabcontent"
                 android:layout_width="0dp"
                 android:layout_height="0dp" />
-            
+
             <FrameLayout
                 android:id="@+id/realTabcontent"
                 android:layout_width="match_parent"

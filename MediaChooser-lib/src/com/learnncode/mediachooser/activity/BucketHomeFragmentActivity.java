@@ -22,9 +22,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -35,7 +37,9 @@ import android.support.v4.app.FragmentTabHost;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TabHost.OnTabChangeListener;
@@ -54,27 +58,28 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
 	private TextView headerBarTitle;
 	private ImageView headerBarCamera;
 	private ImageView headerBarBack;
-	private ImageView headerBarDone;
+	private TextView headerBarDone;
 
 	private static Uri fileUri;
 	private ArrayList<String> mSelectedVideo = new ArrayList<String>();
 	private ArrayList<String> mSelectedImage = new ArrayList<String>();
 	private final Handler handler = new Handler();
 
+	@SuppressLint("ResourceAsColor")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		requestWindowFeature(Window.FEATURE_NO_TITLE); 
 		setContentView(R.layout.activity_home_media_chooser);
 
 		headerBarTitle  = (TextView)findViewById(R.id.titleTextViewFromMediaChooserHeaderBar);
 		headerBarCamera = (ImageView)findViewById(R.id.cameraImageViewFromMediaChooserHeaderBar);
 		headerBarBack   = (ImageView)findViewById(R.id.backArrowImageViewFromMediaChooserHeaderView);
-		headerBarDone   = (ImageView)findViewById(R.id.doneImageViewFromMediaChooserHeaderView);
+		headerBarDone   = (TextView)findViewById(R.id.doneTextViewViewFromMediaChooserHeaderView);
 		mTabHost        = (FragmentTabHost) findViewById(android.R.id.tabhost);
 
 		headerBarTitle.setText(getResources().getString(R.string.video));
-		headerBarCamera.setBackgroundResource(R.drawable.ic_video_white);
+		headerBarCamera.setBackgroundResource(R.drawable.ic_video_unselect_from_media_chooser_header_bar);
 		headerBarCamera.setTag(getResources().getString(R.string.video));
 
 		headerBarBack.setOnClickListener(clickListener);
@@ -91,19 +96,24 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
 
 		if(MediaChooserConstants.showVideo){
 			mTabHost.addTab(
-					mTabHost.newTabSpec("tab2").setIndicator("Video"),
+					mTabHost.newTabSpec("tab2").setIndicator(getResources().getString(R.string.videos_tab) + "      "),
 					BucketVideoFragment.class, null);
 		}
 
 		if(MediaChooserConstants.showImage){
 			mTabHost.addTab(
-					mTabHost.newTabSpec("tab1").setIndicator("Image"),
+					mTabHost.newTabSpec("tab1").setIndicator(getResources().getString(R.string.images_tab) + "      "),
 					BucketImageFragment.class, null);
 		}
 
+		mTabHost.getTabWidget().setBackgroundColor(getResources().getColor(R.color.tabs_color));
+
 		for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {
 
-			TextView textView = (TextView) mTabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
+			View childView = mTabHost.getTabWidget().getChildAt(i);
+			TextView textView = (TextView) childView.findViewById(android.R.id.title);
+
+
 			if(textView.getLayoutParams() instanceof RelativeLayout.LayoutParams){
 
 				RelativeLayout.LayoutParams params = (android.widget.RelativeLayout.LayoutParams) textView.getLayoutParams();
@@ -111,15 +121,20 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
 				params.addRule(RelativeLayout.CENTER_VERTICAL);
 				params.height = RelativeLayout.LayoutParams.MATCH_PARENT;
 				params.width  = RelativeLayout.LayoutParams.WRAP_CONTENT;
-				mTabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title).setLayoutParams(params);
+				textView.setLayoutParams(params);
 
 			}else if(textView.getLayoutParams() instanceof LinearLayout.LayoutParams){
 				LinearLayout.LayoutParams params = (android.widget.LinearLayout.LayoutParams) textView.getLayoutParams();
 				params.gravity = Gravity.CENTER;
-				mTabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title).setLayoutParams(params);
+				textView.setLayoutParams(params);
 			}
-
+			textView.setTextColor(getResources().getColor(R.color.tabs_title_color));
+			textView.setTextSize(convertDipToPixels(10));
 		}
+		
+		((TextView)(mTabHost.getTabWidget().getChildAt(1).findViewById(android.R.id.title))).setTextColor(getResources().getColor(R.color.headerbar_selected_tab_color));
+		((TextView)(mTabHost.getTabWidget().getChildAt(0).findViewById(android.R.id.title))).setTextColor(Color.WHITE);
+
 
 		mTabHost.setOnTabChangedListener(new OnTabChangeListener() {
 
@@ -130,23 +145,6 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
 				BucketImageFragment imageFragment  = (BucketImageFragment) fragmentManager.findFragmentByTag("tab1");
 				BucketVideoFragment videoFragment  = (BucketVideoFragment) fragmentManager.findFragmentByTag("tab2");
 				android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-
-				/*if(tabId.equalsIgnoreCase("tab1")){
-					if(imageFragment != null){   
-						if(videoFragment != null){
-							fragmentTransaction.hide(videoFragment);
-						}
-						fragmentTransaction.show(imageFragment); 
-					}
-				}else{ 
-					if(videoFragment != null){
-						if(videoFragment != null){
-							fragmentTransaction.hide(imageFragment);
-						}
-						fragmentTransaction.show(videoFragment);   
-					}
-				}*/
 
 				if(tabId.equalsIgnoreCase("tab1")){
 
@@ -167,6 +165,9 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
 						fragmentTransaction.show(imageFragment); 
 
 					}
+					((TextView)(mTabHost.getTabWidget().getChildAt(0).findViewById(android.R.id.title))).setTextColor(getResources().getColor(R.color.headerbar_selected_tab_color));
+					((TextView)(mTabHost.getTabWidget().getChildAt(1).findViewById(android.R.id.title))).setTextColor(Color.WHITE);
+
 				}else{ 
 					headerBarTitle.setText(getResources().getString(R.string.video));
 					headerBarCamera.setBackgroundResource(R.drawable.selector_video_button);
@@ -185,10 +186,22 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
 
 						fragmentTransaction.show(videoFragment);   
 					}
+					
+					((TextView)(mTabHost.getTabWidget().getChildAt(0).findViewById(android.R.id.title))).setTextColor(Color.WHITE);
+					((TextView)(mTabHost.getTabWidget().getChildAt(1).findViewById(android.R.id.title))).setTextColor(getResources().getColor(R.color.headerbar_selected_tab_color));
+
 				}
+
 				fragmentTransaction.commit();         
 			}
 		});
+
+		RelativeLayout.LayoutParams params = (android.widget.RelativeLayout.LayoutParams) headerBarCamera.getLayoutParams();
+		params.height = convertDipToPixels(40);
+		params.width  = convertDipToPixels(40);
+		headerBarCamera.setLayoutParams(params);
+		headerBarCamera.setScaleType(ScaleType.CENTER_INSIDE);
+		headerBarCamera.setPadding(convertDipToPixels(15), convertDipToPixels(15), convertDipToPixels(15), convertDipToPixels(15));
 
 	}
 
@@ -338,6 +351,11 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
 		for (String string : input) {
 			list.add(string);
 		}
+	}
+
+
+	public int convertDipToPixels(float dips){
+		return (int) (dips * BucketHomeFragmentActivity.this.getResources().getDisplayMetrics().density + 0.5f);
 	}
 
 }

@@ -10,7 +10,7 @@
         android:background="@null"
         android:contentDescription="@null"
         android:scaleType="centerCrop"
-        android:src="@drawable/loading" />
+        android:src="@drawable/ic_loading" />
 
     <TextView
         android:id="@+id/nameTextViewFromMediaChooserBucketRowView"
