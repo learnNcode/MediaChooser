@@ -37,6 +37,11 @@ Add following code to the application node of your application's manifest file
 
 ChangeLog
 -----------------------------------
+<b>Version 1.0.6 </b>
+
+   __1]__ Updated UI.
+   
+   __2]__ Bug fixes.
 
 <b>Version 1.0.5 </b>
 
