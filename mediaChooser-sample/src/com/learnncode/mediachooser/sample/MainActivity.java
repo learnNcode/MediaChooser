@@ -26,6 +26,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Toast;
@@ -44,6 +45,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE); 
 		setContentView(R.layout.activity_main);
 		folderViewButton = (Button)findViewById(R.id.folderButton);
 		fileViewButton = (Button)findViewById(R.id.fileButton);
