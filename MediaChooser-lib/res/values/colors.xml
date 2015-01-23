@@ -3,10 +3,10 @@
 
     <!-- Gallery thumbnail background -->
 
-    <color name="headerbar_color"> #81D4FA</color>
-    <color name="tabs_color"> #81D4FA </color>
-    <color name="tabs_title_color"> #FFFFFF </color>
-    <color name="headerbar_title_color"> #FFFFFF </color>
-    <color name="headerbar_selected_tab_color"> #34b4e3 </color>
+    <color name="headerbar_color">#81D4FA</color>
+    <color name="tabs_color">#81D4FA</color>
+    <color name="tabs_title_color">#FFFFFF</color>
+    <color name="headerbar_title_color">#FFFFFF</color>
+    <color name="headerbar_selected_tab_color">#34b4e3</color>
 
 </resources>
