@@ -82,7 +82,7 @@ VideoFragment.OnVideoSelectedListener{
 
 	}
 
-    private void setupContentView() {
+	protected void setupContentView() {
         setContentView(R.layout.activity_home_media_chooser);
     }
 
