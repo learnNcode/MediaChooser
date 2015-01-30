@@ -67,7 +67,17 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_home_media_chooser);
 
-        headerBarTitle = (TextView) findViewById(R.id.titleTextViewFromMediaChooserHeaderBar);
+        setupUI();
+
+        setupTabHost();
+
+        setupTabHostChangedListener();
+
+        seupHeader();
+    }
+
+	private void setupUI() {
+		headerBarTitle = (TextView) findViewById(R.id.titleTextViewFromMediaChooserHeaderBar);
         headerBarCamera = (ImageView) findViewById(R.id.cameraImageViewFromMediaChooserHeaderBar);
         headerBarBack = (ImageView) findViewById(R.id.backArrowImageViewFromMediaChooserHeaderView);
         headerBarDone = (TextView) findViewById(R.id.doneTextViewViewFromMediaChooserHeaderView);
@@ -84,8 +94,10 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
         if (!MediaChooserConstants.showCameraVideo) {
             headerBarCamera.setVisibility(View.GONE);
         }
+	}
 
-        mTabHost.setup(this, getSupportFragmentManager(), R.id.realTabcontent);
+	private void setupTabHost() {
+		mTabHost.setup(this, getSupportFragmentManager(), R.id.realTabcontent);
 
 
         if (MediaChooserConstants.showVideo) {
@@ -128,9 +140,10 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
 
         ((TextView) (mTabHost.getTabWidget().getChildAt(1).findViewById(android.R.id.title))).setTextColor(getResources().getColor(R.color.headerbar_selected_tab_color));
         ((TextView) (mTabHost.getTabWidget().getChildAt(0).findViewById(android.R.id.title))).setTextColor(Color.WHITE);
+	}
 
-
-        mTabHost.setOnTabChangedListener(new OnTabChangeListener() {
+	private void setupTabHostChangedListener() {
+		mTabHost.setOnTabChangedListener(new OnTabChangeListener() {
 
             @Override
             public void onTabChanged(String tabId) {
@@ -189,15 +202,16 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
                 fragmentTransaction.commit();
             }
         });
+	}
 
-        RelativeLayout.LayoutParams params = (android.widget.RelativeLayout.LayoutParams) headerBarCamera.getLayoutParams();
+	private void seupHeader() {
+		RelativeLayout.LayoutParams params = (android.widget.RelativeLayout.LayoutParams) headerBarCamera.getLayoutParams();
         params.height = convertDipToPixels(40);
         params.width = convertDipToPixels(40);
         headerBarCamera.setLayoutParams(params);
         headerBarCamera.setScaleType(ScaleType.CENTER_INSIDE);
         headerBarCamera.setPadding(convertDipToPixels(15), convertDipToPixels(15), convertDipToPixels(15), convertDipToPixels(15));
-
-    }
+	}
 
     OnClickListener clickListener = new OnClickListener() {
 
