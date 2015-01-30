@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.learnncode.mediachooser"
-    android:versionCode="1"
-    android:versionName="1.0.6" >
+          package="com.learnncode.mediachooser"
+          android:versionCode="1"
+          android:versionName="1.0.6">
 
     <uses-sdk
-        android:minSdkVersion="10"
-        android:targetSdkVersion="18" />
+            android:minSdkVersion="10"
+            android:targetSdkVersion="18"/>
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
-        android:name="@string/app_name"
-        android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
-        android:theme="@android:style/Theme.Light.NoTitleBar"
-         >
+            android:name="@string/app_name"
+            android:allowBackup="true"
+            android:icon="@drawable/ic_launcher"
+            android:theme="@android:style/Theme.Light.NoTitleBar"
+            >
         <activity
-            android:name="com.learnncode.mediachooser.activity.HomeFragmentActivity"
-            android:configChanges="orientation|screenSize" >
+                android:name="com.learnncode.mediachooser.activity.HomeFragmentActivity"
+                android:configChanges="orientation|screenSize">
         </activity>
         <activity
-            android:name="com.learnncode.mediachooser.activity.BucketHomeFragmentActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait" >
+                android:name="com.learnncode.mediachooser.activity.BucketHomeFragmentActivity"
+                android:configChanges="orientation|screenSize"
+                android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
-            android:name="com.learnncode.mediachooser.fragment.ImageFragment"
-            android:screenOrientation="portrait" >
+                android:name="com.learnncode.mediachooser.fragment.ImageFragment"
+                android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.learnncode.mediachooser.fragment.VideoFragment"
-            android:screenOrientation="portrait" >
+                android:name="com.learnncode.mediachooser.fragment.VideoFragment"
+                android:screenOrientation="portrait">
         </activity>
     </application>
 

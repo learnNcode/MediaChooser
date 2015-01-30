@@ -1,53 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/postToActionBarFromMediaChooser"
-    android:layout_width="match_parent"
-    android:layout_height="48dp"
-    android:layout_alignParentTop="true"
-    android:background="@color/headerbar_color" >
+                android:id="@+id/postToActionBarFromMediaChooser"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_alignParentTop="true"
+                android:background="@color/headerbar_color">
 
     <ImageView
-        android:id="@+id/backArrowImageViewFromMediaChooserHeaderView"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:adjustViewBounds="true"
-        android:contentDescription="@null"
-        android:scaleType="fitXY"
-        android:src="@drawable/ic_navigation_left_from_media_chooser_header_bar" />
+            android:id="@+id/backArrowImageViewFromMediaChooserHeaderView"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:adjustViewBounds="true"
+            android:contentDescription="@null"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_navigation_left_from_media_chooser_header_bar"/>
 
     <TextView
-        android:id="@+id/titleTextViewFromMediaChooserHeaderBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@id/backArrowImageViewFromMediaChooserHeaderView"
-        android:text="@string/video"
-        android:textColor="@color/headerbar_title_color"
-        android:textSize="25sp" />
+            android:id="@+id/titleTextViewFromMediaChooserHeaderBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/backArrowImageViewFromMediaChooserHeaderView"
+            android:text="@string/video"
+            android:textColor="@color/headerbar_title_color"
+            android:textSize="25sp"/>
 
     <TextView
-        android:id="@+id/doneTextViewViewFromMediaChooserHeaderView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="5dp"
-        android:text="@string/done"
-        android:textColor="@color/headerbar_title_color"
-        android:textSize="23sp" />
+            android:id="@+id/doneTextViewViewFromMediaChooserHeaderView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:text="@string/done"
+            android:textColor="@color/headerbar_title_color"
+            android:textSize="23sp"/>
 
     <ImageView
-        android:id="@+id/cameraImageViewFromMediaChooserHeaderBar"
-        android:layout_width="45dp"
-        android:layout_height="fill_parent"
-        android:layout_centerInParent="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="10dp"
-        android:layout_toLeftOf="@id/doneTextViewViewFromMediaChooserHeaderView"
-        android:adjustViewBounds="true"
-        android:contentDescription="@null"
-        android:scaleType="centerInside" />
+            android:id="@+id/cameraImageViewFromMediaChooserHeaderBar"
+            android:layout_width="45dp"
+            android:layout_height="fill_parent"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@id/doneTextViewViewFromMediaChooserHeaderView"
+            android:adjustViewBounds="true"
+            android:contentDescription="@null"
+            android:scaleType="centerInside"/>
 
 </RelativeLayout>
