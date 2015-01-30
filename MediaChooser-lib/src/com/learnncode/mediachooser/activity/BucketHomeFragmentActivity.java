@@ -65,7 +65,9 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_home_media_chooser);
+        setupContentView();
+
+        setupHeaderUI();
 
         setupUI();
 
@@ -73,31 +75,51 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
 
         setupTabHostChangedListener();
 
-        seupHeader();
     }
 
-	private void setupUI() {
-		headerBarTitle = (TextView) findViewById(R.id.titleTextViewFromMediaChooserHeaderBar);
-        headerBarCamera = (ImageView) findViewById(R.id.cameraImageViewFromMediaChooserHeaderBar);
-        headerBarBack = (ImageView) findViewById(R.id.backArrowImageViewFromMediaChooserHeaderView);
-        headerBarDone = (TextView) findViewById(R.id.doneTextViewViewFromMediaChooserHeaderView);
-        mTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
+    protected void setupContentView() {
+        setContentView(R.layout.activity_home_media_chooser);
+    }
 
+    protected void setupHeaderUI() {
+
+        headerBarBack = (ImageView) findViewById(R.id.backArrowImageViewFromMediaChooserHeaderView);
+        headerBarBack.setOnClickListener(clickListener);
+
+        headerBarTitle = (TextView) findViewById(R.id.titleTextViewFromMediaChooserHeaderBar);
         headerBarTitle.setText(getResources().getString(R.string.video));
+
+        headerBarCamera = (ImageView) findViewById(R.id.cameraImageViewFromMediaChooserHeaderBar);
         headerBarCamera.setBackgroundResource(R.drawable.ic_video_unselect_from_media_chooser_header_bar);
         headerBarCamera.setTag(getResources().getString(R.string.video));
-
-        headerBarBack.setOnClickListener(clickListener);
         headerBarCamera.setOnClickListener(clickListener);
-        headerBarDone.setOnClickListener(clickListener);
-
+        RelativeLayout.LayoutParams params = (android.widget.RelativeLayout.LayoutParams) headerBarCamera.getLayoutParams();
+        params.height = convertDipToPixels(40);
+        params.width = convertDipToPixels(40);
+        headerBarCamera.setLayoutParams(params);
+        headerBarCamera.setScaleType(ScaleType.CENTER_INSIDE);
+        headerBarCamera.setPadding(convertDipToPixels(15), convertDipToPixels(15), convertDipToPixels(15), convertDipToPixels(15));
         if (!MediaChooserConstants.showCameraVideo) {
             headerBarCamera.setVisibility(View.GONE);
         }
-	}
 
-	private void setupTabHost() {
-		mTabHost.setup(this, getSupportFragmentManager(), R.id.realTabcontent);
+        headerBarDone = (TextView) findViewById(R.id.doneTextViewViewFromMediaChooserHeaderView);
+        headerBarDone.setOnClickListener(clickListener);
+    }
+
+    protected void setHeaderTitle(int id_text, int id_image) {
+        headerBarTitle.setText(getResources().getString(id_text));
+        headerBarCamera.setBackgroundResource(id_image);
+        headerBarCamera.setTag(getResources().getString(id_text));
+    }
+    
+    protected void setupUI() {
+        mTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
+
+    }
+
+    protected void setupTabHost() {
+        mTabHost.setup(this, getSupportFragmentManager(), R.id.realTabcontent);
 
 
         if (MediaChooserConstants.showVideo) {
@@ -140,10 +162,10 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
 
         ((TextView) (mTabHost.getTabWidget().getChildAt(1).findViewById(android.R.id.title))).setTextColor(getResources().getColor(R.color.headerbar_selected_tab_color));
         ((TextView) (mTabHost.getTabWidget().getChildAt(0).findViewById(android.R.id.title))).setTextColor(Color.WHITE);
-	}
+    }
 
-	private void setupTabHostChangedListener() {
-		mTabHost.setOnTabChangedListener(new OnTabChangeListener() {
+    protected void setupTabHostChangedListener() {
+        mTabHost.setOnTabChangedListener(new OnTabChangeListener() {
 
             @Override
             public void onTabChanged(String tabId) {
@@ -154,10 +176,7 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
                 android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
                 if (tabId.equalsIgnoreCase("tab1")) {
-
-                    headerBarTitle.setText(getResources().getString(R.string.image));
-                    headerBarCamera.setBackgroundResource(R.drawable.selector_camera_button);
-                    headerBarCamera.setTag(getResources().getString(R.string.image));
+                    setHeaderTitle(R.string.image, R.drawable.selector_camera_button);
 
                     if (imageFragment == null) {
                         BucketImageFragment newImageFragment = new BucketImageFragment();
@@ -176,9 +195,7 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
                     ((TextView) (mTabHost.getTabWidget().getChildAt(1).findViewById(android.R.id.title))).setTextColor(Color.WHITE);
 
                 } else {
-                    headerBarTitle.setText(getResources().getString(R.string.video));
-                    headerBarCamera.setBackgroundResource(R.drawable.selector_video_button);
-                    headerBarCamera.setTag(getResources().getString(R.string.video));
+                    setHeaderTitle(R.string.video, R.drawable.selector_video_button);
 
                     if (videoFragment == null) {
 
@@ -202,16 +219,7 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
                 fragmentTransaction.commit();
             }
         });
-	}
-
-	private void seupHeader() {
-		RelativeLayout.LayoutParams params = (android.widget.RelativeLayout.LayoutParams) headerBarCamera.getLayoutParams();
-        params.height = convertDipToPixels(40);
-        params.width = convertDipToPixels(40);
-        headerBarCamera.setLayoutParams(params);
-        headerBarCamera.setScaleType(ScaleType.CENTER_INSIDE);
-        headerBarCamera.setPadding(convertDipToPixels(15), convertDipToPixels(15), convertDipToPixels(15), convertDipToPixels(15));
-	}
+    }
 
     OnClickListener clickListener = new OnClickListener() {
 
