@@ -17,40 +17,39 @@
 
 package com.learnncode.mediachooser.async;
 
-import java.io.File;
-
 import android.content.Context;
 import android.widget.ImageView;
-
 import com.learnncode.mediachooser.R;
 import com.squareup.picasso.Picasso;
 
-public class ImageLoadAsync extends MediaAsync<String,String, String>{
+import java.io.File;
 
-	private ImageView mImageView;
-	private Context mContext;
-	private int mWidth;
+public class ImageLoadAsync extends MediaAsync<String, String, String> {
 
-	public ImageLoadAsync(Context context,ImageView imageView, int width) {
-		mImageView = imageView;
-		mContext   = context;
-		mWidth     = width;
-	}
+    private ImageView mImageView;
+    private Context mContext;
+    private int mWidth;
 
-	@Override
-	protected String doInBackground(String... params) {
-		String url = params[0].toString();
-		return url;
-	}
+    public ImageLoadAsync(Context context, ImageView imageView, int width) {
+        mImageView = imageView;
+        mContext = context;
+        mWidth = width;
+    }
 
-	@Override
-	protected void onPostExecute(String result) {
-		Picasso.with(mContext)
-		.load(new File(result))
-		.resize(mWidth, mWidth)
-		.centerCrop().placeholder(R.drawable.ic_loading)
-		.into(mImageView);
+    @Override
+    protected String doInBackground(String... params) {
+        String url = params[0].toString();
+        return url;
+    }
 
-	}
+    @Override
+    protected void onPostExecute(String result) {
+        Picasso.with(mContext)
+                .load(new File(result))
+                .resize(mWidth, mWidth)
+                .centerCrop().placeholder(R.drawable.ic_loading)
+                .into(mImageView);
+
+    }
 
 }
