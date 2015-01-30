@@ -15,7 +15,11 @@
  */
 
 
+
 package com.learnncode.mediachooser.fragment;
+
+import java.io.File;
+import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -34,141 +38,150 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.GridView;
 import android.widget.Toast;
+
 import com.learnncode.mediachooser.MediaChooserConstants;
 import com.learnncode.mediachooser.MediaModel;
 import com.learnncode.mediachooser.R;
 import com.learnncode.mediachooser.adapter.GridViewAdapter;
 
-import java.io.File;
-import java.util.ArrayList;
-
 public class VideoFragment extends Fragment implements OnScrollListener {
 
-    private final static Uri MEDIA_EXTERNAL_CONTENT_URI = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-    private final static String MEDIA_DATA = MediaStore.Video.Media.DATA;
+	private final static Uri MEDIA_EXTERNAL_CONTENT_URI = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+	private final static String MEDIA_DATA = MediaStore.Video.Media.DATA;
 
-    private GridViewAdapter mVideoAdapter;
-    private GridView mVideoGridView;
-    private Cursor mCursor;
-    private int mDataColumnIndex;
-    private ArrayList<String> mSelectedItems = new ArrayList<String>();
-    private ArrayList<MediaModel> mGalleryModelList;
-    private View mView;
-    private OnVideoSelectedListener mCallback;
+	private GridViewAdapter mVideoAdapter;
+	private GridView mVideoGridView;
+	private Cursor mCursor;
+	private int mDataColumnIndex;
+	private ArrayList<String> mSelectedItems = new ArrayList<String>();
+	private ArrayList<MediaModel> mGalleryModelList;
+	private View mView;
+	private OnVideoSelectedListener mCallback;
 
 
-    // Container Activity must implement this interface
-    public interface OnVideoSelectedListener {
-        public void onVideoSelected(int count);
+	// Container Activity must implement this interface
+	public interface OnVideoSelectedListener {
+		public void onVideoSelected(int count);
+	}
+
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+
+		// This makes sure that the container activity has implemented
+		// the callback interface. If not, it throws an exception
+		try {
+			mCallback = (OnVideoSelectedListener) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString() + " must implement OnVideoSelectedListener");
+		}
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+	}
+
+	public VideoFragment(){
+		setRetainInstance(true);
+	}
+
+
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+		if(mView == null){
+			mView = inflater.inflate(R.layout.view_grid_layout_media_chooser, container, false);
+
+			mVideoGridView = (GridView)mView.findViewById(R.id.gridViewFromMediaChooser);
+
+			if (getArguments() != null) {
+				initVideos(getArguments().getString("name"));
+			}else{
+				initVideos();
+			}
+
+		}else{
+			((ViewGroup) mView.getParent()).removeView(mView);
+			if(mVideoAdapter == null || mVideoAdapter.getCount() == 0){
+				Toast.makeText(getActivity(), getActivity().getString(R.string.no_media_file_available), Toast.LENGTH_SHORT).show();
+			}
+		}
+
+		return mView;
+	};
+
+
+	private void initVideos(String bucketName) {
+
+		try {
+			final String orderBy = MediaStore.Video.Media.DATE_TAKEN;
+			String searchParams = null;
+			searchParams = "bucket_display_name = \"" + bucketName + "\"";
+
+			final String[] columns = { MediaStore.Images.Media.DATA, MediaStore.Video.Media._ID};
+			mCursor = getActivity().getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, columns, searchParams, null, orderBy + " DESC");
+			setAdapter();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void initVideos() {
+
+		try {
+			final String orderBy = MediaStore.Images.Media.DATE_TAKEN;
+			//Here we set up a string array of the thumbnail ID column we want to get back
+
+			String [] proj = {MediaStore.Video.Media.DATA,MediaStore.Video.Media._ID};
+
+			mCursor =  getActivity().getContentResolver().query(MEDIA_EXTERNAL_CONTENT_URI, proj, null,null, orderBy + " DESC");
+			setAdapter();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	private void setAdapter() {
+        setupCursor();
+
+        setupOnItemLongClickListener();
+
+        setupOnItemClickListener();
+
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        // This makes sure that the container activity has implemented
-        // the callback interface. If not, it throws an exception
-        try {
-            mCallback = (OnVideoSelectedListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement OnVideoSelectedListener");
-        }
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    public VideoFragment() {
-        setRetainInstance(true);
-    }
-
-
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        if (mView == null) {
-            mView = inflater.inflate(R.layout.view_grid_layout_media_chooser, container, false);
-
-            mVideoGridView = (GridView) mView.findViewById(R.id.gridViewFromMediaChooser);
-
-            if (getArguments() != null) {
-                initVideos(getArguments().getString("name"));
-            } else {
-                initVideos();
-            }
-
-        } else {
-            ((ViewGroup) mView.getParent()).removeView(mView);
-            if (mVideoAdapter == null || mVideoAdapter.getCount() == 0) {
-                Toast.makeText(getActivity(), getActivity().getString(R.string.no_media_file_available), Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        return mView;
-    }
-
-    ;
-
-
-    private void initVideos(String bucketName) {
-
-        try {
-            final String orderBy = MediaStore.Video.Media.DATE_TAKEN;
-            String searchParams = null;
-            searchParams = "bucket_display_name = \"" + bucketName + "\"";
-
-            final String[] columns = {MediaStore.Images.Media.DATA, MediaStore.Video.Media._ID};
-            mCursor = getActivity().getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, columns, searchParams, null, orderBy + " DESC");
-            setAdapter();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void initVideos() {
-
-        try {
-            final String orderBy = MediaStore.Images.Media.DATE_TAKEN;
-            //Here we set up a string array of the thumbnail ID column we want to get back
-
-            String[] proj = {MediaStore.Video.Media.DATA, MediaStore.Video.Media._ID};
-
-            mCursor = getActivity().getContentResolver().query(MEDIA_EXTERNAL_CONTENT_URI, proj, null, null, orderBy + " DESC");
-            setAdapter();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    private void setAdapter() {
+    protected void setupCursor() {
         int count = mCursor.getCount();
 
-        if (count > 0) {
+        if(count > 0){
             mDataColumnIndex = mCursor.getColumnIndex(MEDIA_DATA);
 
             //move position to first element
             mCursor.moveToFirst();
 
-            mGalleryModelList = new ArrayList<MediaModel>();
-            for (int i = 0; i < count; i++) {
-                mCursor.moveToPosition(i);
-                String url = mCursor.getString(mDataColumnIndex);
-                mGalleryModelList.add(new MediaModel(url, false));
-            }
+            setupGalleryModelList(count);
 
-
-            mVideoAdapter = new GridViewAdapter(getActivity(), 0, mGalleryModelList, true);
+            mVideoAdapter =  new GridViewAdapter(getActivity(), 0, mGalleryModelList, true);
             mVideoAdapter.videoFragment = this;
             mVideoGridView.setAdapter(mVideoAdapter);
             mVideoGridView.setOnScrollListener(this);
-        } else {
+        }else{
             Toast.makeText(getActivity(), getActivity().getString(R.string.no_media_file_available), Toast.LENGTH_SHORT).show();
 
         }
+    }
 
+    protected void setupGalleryModelList(int count) {
+        mGalleryModelList = new ArrayList<MediaModel>();
+        for(int i= 0; i < count; i++) {
+            mCursor.moveToPosition(i);
+            String url = mCursor.getString(mDataColumnIndex);
+            mGalleryModelList.add(new MediaModel(url, false));
+        }
+    }
 
+    private void setupOnItemLongClickListener() {
         mVideoGridView.setOnItemLongClickListener(new OnItemLongClickListener() {
 
             @Override
@@ -182,7 +195,9 @@ public class VideoFragment extends Fragment implements OnScrollListener {
                 return false;
             }
         });
+    }
 
+    protected void setupOnItemClickListener() {
         mVideoGridView.setOnItemClickListener(new OnItemClickListener() {
 
             @Override
@@ -191,35 +206,35 @@ public class VideoFragment extends Fragment implements OnScrollListener {
                 GridViewAdapter adapter = (GridViewAdapter) parent.getAdapter();
                 MediaModel galleryModel = (MediaModel) adapter.getItem(position);
 
-                if (!galleryModel.status) {
+                if(! galleryModel.status){
                     long size = MediaChooserConstants.ChekcMediaFileSize(new File(galleryModel.url.toString()), true);
-                    if (size != 0) {
+                    if(size != 0){
                         Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.file_size_exeeded) + "  " + MediaChooserConstants.SELECTED_VIDEO_SIZE_IN_MB + " " + getActivity().getResources().getString(R.string.mb), Toast.LENGTH_SHORT).show();
                         return;
                     }
 
-                    if ((MediaChooserConstants.MAX_MEDIA_LIMIT == MediaChooserConstants.SELECTED_MEDIA_COUNT)) {
+                    if((MediaChooserConstants.MAX_MEDIA_LIMIT == MediaChooserConstants.SELECTED_MEDIA_COUNT)){
                         if (MediaChooserConstants.SELECTED_MEDIA_COUNT < 2) {
-                            Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.max_limit_file) + "  " + MediaChooserConstants.SELECTED_MEDIA_COUNT + " " + getActivity().getResources().getString(R.string.file), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.max_limit_file) + "  " + MediaChooserConstants.SELECTED_MEDIA_COUNT + " " +  getActivity().getResources().getString(R.string.file), Toast.LENGTH_SHORT).show();
                             return;
                         } else {
-                            Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.max_limit_file) + "  " + MediaChooserConstants.SELECTED_MEDIA_COUNT + " " + getActivity().getResources().getString(R.string.files), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.max_limit_file) + "  " + MediaChooserConstants.SELECTED_MEDIA_COUNT + " " +  getActivity().getResources().getString(R.string.files), Toast.LENGTH_SHORT).show();
                             return;
                         }
                     }
                 }
 
                 // inverse the status
-                galleryModel.status = !galleryModel.status;
+                galleryModel.status = ! galleryModel.status;
                 adapter.notifyDataSetChanged();
 
                 if (galleryModel.status) {
                     mSelectedItems.add(galleryModel.url.toString());
-                    MediaChooserConstants.SELECTED_MEDIA_COUNT++;
+                    MediaChooserConstants.SELECTED_MEDIA_COUNT ++;
 
-                } else {
+                }else{
                     mSelectedItems.remove(galleryModel.url.toString().trim());
-                    MediaChooserConstants.SELECTED_MEDIA_COUNT--;
+                    MediaChooserConstants.SELECTED_MEDIA_COUNT --;
                 }
 
                 if (mCallback != null) {
@@ -231,54 +246,53 @@ public class VideoFragment extends Fragment implements OnScrollListener {
 
             }
         });
-
     }
 
     public void addItem(String item) {
-        if (mVideoAdapter != null) {
-            MediaModel model = new MediaModel(item, false);
-            mGalleryModelList.add(0, model);
-            mVideoAdapter.notifyDataSetChanged();
-        } else {
-            initVideos();
-        }
-    }
+		if(mVideoAdapter != null){
+			MediaModel model = new MediaModel(item, false);
+			mGalleryModelList.add(0, model);
+			mVideoAdapter.notifyDataSetChanged();
+		}else{
+			initVideos();
+		}
+	}
 
 
-    public GridViewAdapter getAdapter() {
-        if (mVideoAdapter != null) {
-            return mVideoAdapter;
-        }
-        return null;
-    }
+	public GridViewAdapter getAdapter() {
+		if (mVideoAdapter != null) {
+			return mVideoAdapter;
+		}
+		return null;
+	}
 
-    public ArrayList<String> getSelectedVideoList() {
-        return mSelectedItems;
-    }
+	public ArrayList<String> getSelectedVideoList() {
+		return mSelectedItems;
+	}
 
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
-        //		if (view.getId() == android.R.id.list) {
-        if (view == mVideoGridView) {
-            // Set scrolling to true only if the user has flinged the
-            // ListView away, hence we skip downloading a series
-            // of unnecessary bitmaps that the user probably
-            // just want to skip anyways. If we scroll slowly it
-            // will still download bitmaps - that means
-            // that the application won't wait for the user
-            // to lift its finger off the screen in order to
-            // download.
-            if (scrollState == SCROLL_STATE_FLING) {
-                //chk
-            } else {
-                mVideoAdapter.notifyDataSetChanged();
-            }
-        }
-    }
+	public void onScrollStateChanged(AbsListView view, int scrollState) {
+		//		if (view.getId() == android.R.id.list) {
+		if (view == mVideoGridView) {
+			// Set scrolling to true only if the user has flinged the
+			// ListView away, hence we skip downloading a series
+			// of unnecessary bitmaps that the user probably
+			// just want to skip anyways. If we scroll slowly it
+			// will still download bitmaps - that means
+			// that the application won't wait for the user
+			// to lift its finger off the screen in order to
+			// download.
+			if (scrollState == SCROLL_STATE_FLING) {
+				//chk
+			} else {
+				mVideoAdapter.notifyDataSetChanged();
+			}
+		}
+	}
 
-    public void onScroll(AbsListView view, int firstVisibleItem,
-                         int visibleItemCount, int totalItemCount) {
+	public void onScroll(AbsListView view, int firstVisibleItem,
+			int visibleItemCount, int totalItemCount) {
 
-    }
+	}
 
 
 }
