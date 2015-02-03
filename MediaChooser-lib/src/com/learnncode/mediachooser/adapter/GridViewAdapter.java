@@ -36,81 +36,81 @@ import com.learnncode.mediachooser.async.VideoLoadAsync;
 import com.learnncode.mediachooser.fragment.VideoFragment;
 
 public class GridViewAdapter extends ArrayAdapter<MediaModel> {
-    public VideoFragment videoFragment;  
+	public VideoFragment videoFragment;  
 
-    private Context mContext;
-    private List<MediaModel> mGalleryModelList;
-    private int mWidth;
-    private boolean mIsFromVideo;
-    LayoutInflater viewInflater;
-    
+	private Context mContext;
+	private List<MediaModel> mGalleryModelList;
+	private int mWidth;
+	private boolean mIsFromVideo;
+	LayoutInflater viewInflater;
+	
 
-    public GridViewAdapter(Context context, int resource, List<MediaModel> categories, boolean isFromVideo) {
-        super(context, resource, categories);
-        mGalleryModelList = categories;
-        mContext          = context;
-        mIsFromVideo      = isFromVideo;
-        viewInflater = LayoutInflater.from(mContext);
-    }
+	public GridViewAdapter(Context context, int resource, List<MediaModel> categories, boolean isFromVideo) {
+		super(context, resource, categories);
+		mGalleryModelList = categories;
+		mContext          = context;
+		mIsFromVideo      = isFromVideo;
+		viewInflater = LayoutInflater.from(mContext);
+	}
 
-    public int getCount() {
-        return mGalleryModelList.size();
-    }
+	public int getCount() {
+		return mGalleryModelList.size();
+	}
 
-    @Override
-    public MediaModel getItem(int position) {
-        return mGalleryModelList.get(position);
-    }
+	@Override
+	public MediaModel getItem(int position) {
+		return mGalleryModelList.get(position);
+	}
 
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
+	@Override
+	public long getItemId(int position) {
+		return position;
+	}
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
 
-        ViewHolder holder;
+		ViewHolder holder;
 
-        if (convertView == null) {
+		if (convertView == null) {
 
-            mWidth = mContext.getResources().getDisplayMetrics().widthPixels;  
-            
-            convertView = viewInflater.inflate(R.layout.view_grid_item_media_chooser, parent, false);
+			mWidth = mContext.getResources().getDisplayMetrics().widthPixels;  
+			
+			convertView = viewInflater.inflate(R.layout.view_grid_item_media_chooser, parent, false);
 
-            holder = new ViewHolder();
-            holder.checkBoxTextView   = (CheckedTextView) convertView.findViewById(R.id.checkTextViewFromMediaChooserGridItemRowView);
-            holder.imageView          = (ImageView) convertView.findViewById(R.id.imageViewFromMediaChooserGridItemRowView);
+			holder = new ViewHolder();
+			holder.checkBoxTextView   = (CheckedTextView) convertView.findViewById(R.id.checkTextViewFromMediaChooserGridItemRowView);
+			holder.imageView          = (ImageView) convertView.findViewById(R.id.imageViewFromMediaChooserGridItemRowView);
 
-            convertView.setTag(holder);
+			convertView.setTag(holder);
 
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
+		} else {
+			holder = (ViewHolder) convertView.getTag();
+		}
 
-        LayoutParams imageParams = (LayoutParams) holder.imageView.getLayoutParams();
-        imageParams.width  = mWidth/2;
-        imageParams.height = mWidth/2;
+		LayoutParams imageParams = (LayoutParams) holder.imageView.getLayoutParams();
+		imageParams.width  = mWidth/2;
+		imageParams.height = mWidth/2;
 
-        holder.imageView.setLayoutParams(imageParams);
+		holder.imageView.setLayoutParams(imageParams);
 
-        // set the status according to this Category item
+		// set the status according to this Category item
 
-        if(mIsFromVideo){
-            new VideoLoadAsync(videoFragment, holder.imageView, false, mWidth/2).executeOnExecutor(MediaAsync.THREAD_POOL_EXECUTOR, mGalleryModelList.get(position).url.toString());
+		if(mIsFromVideo){
+			new VideoLoadAsync(videoFragment, holder.imageView, false, mWidth/2).executeOnExecutor(MediaAsync.THREAD_POOL_EXECUTOR, mGalleryModelList.get(position).url.toString());
 
-        }else{
-            ImageLoadAsync loadAsync = new ImageLoadAsync(mContext, holder.imageView, mWidth/2);
-            loadAsync.executeOnExecutor(MediaAsync.THREAD_POOL_EXECUTOR, mGalleryModelList.get(position).url);
-        }
+		}else{
+			ImageLoadAsync loadAsync = new ImageLoadAsync(mContext, holder.imageView, mWidth/2);
+			loadAsync.executeOnExecutor(MediaAsync.THREAD_POOL_EXECUTOR, mGalleryModelList.get(position).url);
+		}
 
-        holder.checkBoxTextView.setChecked(mGalleryModelList.get(position).status);
-        return convertView;
-    }
+		holder.checkBoxTextView.setChecked(mGalleryModelList.get(position).status);
+		return convertView;
+	}
 
-    class ViewHolder {
-        ImageView imageView;
-        CheckedTextView checkBoxTextView;
-    }
+	class ViewHolder {
+		ImageView imageView;
+		CheckedTextView checkBoxTextView;
+	}
 
 }
