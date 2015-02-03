@@ -15,7 +15,10 @@
  */
 
 
+
 package com.learnncode.mediachooser.fragment;
+
+import java.util.ArrayList;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -30,25 +33,24 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.Toast;
+
 import com.learnncode.mediachooser.BucketEntry;
 import com.learnncode.mediachooser.MediaChooserConstants;
 import com.learnncode.mediachooser.R;
 import com.learnncode.mediachooser.activity.HomeFragmentActivity;
 import com.learnncode.mediachooser.adapter.BucketGridAdapter;
 
-import java.util.ArrayList;
-
-public class BucketVideoFragment extends Fragment {
+public class BucketVideoFragment extends Fragment{
 
     // The indices should match the following projections.
-    private final int INDEX_BUCKET_ID = 0;
-    private final int INDEX_BUCKET_NAME = 1;
-    private final int INDEX_BUCKET_URL = 2;
+    private final int INDEX_BUCKET_ID         = 0;
+    private final int INDEX_BUCKET_NAME     = 1;
+    private final int INDEX_BUCKET_URL         = 2;
 
     private static final String[] PROJECTION_BUCKET = {
-            VideoColumns.BUCKET_ID,
-            VideoColumns.BUCKET_DISPLAY_NAME,
-            VideoColumns.DATA,
+        VideoColumns.BUCKET_ID,
+        VideoColumns.BUCKET_DISPLAY_NAME,
+        VideoColumns.DATA,
     };
 
     private View mView;
@@ -57,20 +59,20 @@ public class BucketVideoFragment extends Fragment {
     private Cursor mCursor;
 
 
-    public BucketVideoFragment() {
+    public BucketVideoFragment(){
         setRetainInstance(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        if (mView == null) {
-            mView = inflater.inflate(R.layout.view_grid_layout_media_chooser, container, false);
-            mGridView = (GridView) mView.findViewById(R.id.gridViewFromMediaChooser);
+            Bundle savedInstanceState) {
+        if(mView == null){
+            mView     = inflater.inflate(R.layout.view_grid_layout_media_chooser, container, false);
+            mGridView = (GridView)mView.findViewById(R.id.gridViewFromMediaChooser);
             init();
-        } else {
+        }else{
             ((ViewGroup) mView.getParent()).removeView(mView);
-            if (mBucketAdapter == null || mBucketAdapter.getCount() == 0) {
+            if(mBucketAdapter == null || mBucketAdapter.getCount() == 0){
                 Toast.makeText(getActivity(), getActivity().getString(R.string.no_media_file_available), Toast.LENGTH_SHORT).show();
             }
         }
@@ -78,7 +80,8 @@ public class BucketVideoFragment extends Fragment {
     }
 
 
-    private void init() {
+
+    private void init(){
         final String orderBy = MediaStore.Video.Media.DATE_TAKEN;
         mCursor = getActivity().getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, PROJECTION_BUCKET, null, null, orderBy + " DESC");
         ArrayList<BucketEntry> buffer = new ArrayList<BucketEntry>();
@@ -86,28 +89,29 @@ public class BucketVideoFragment extends Fragment {
             while (mCursor.moveToNext()) {
                 BucketEntry entry = new BucketEntry(
                         mCursor.getInt(INDEX_BUCKET_ID),
-                        mCursor.getString(INDEX_BUCKET_NAME), mCursor.getString(INDEX_BUCKET_URL));
+                        mCursor.getString(INDEX_BUCKET_NAME),mCursor.getString(INDEX_BUCKET_URL));
 
 
-                if (!buffer.contains(entry)) {
+
+                if (! buffer.contains(entry)) {
                     buffer.add(entry);
                 }
             }
-            if (mCursor.getCount() > 0) {
+            if(mCursor.getCount() > 0){
                 mBucketAdapter = new BucketGridAdapter(getActivity(), 0, buffer, true);
                 mBucketAdapter.bucketVideoFragment = this;
                 mGridView.setAdapter(mBucketAdapter);
-            } else {
+            }else{
                 Toast.makeText(getActivity(), getActivity().getString(R.string.no_media_file_available), Toast.LENGTH_SHORT).show();
             }
             mGridView.setOnItemClickListener(new OnItemClickListener() {
 
                 @Override
                 public void onItemClick(AdapterView<?> adapter, View view,
-                                        int position, long id) {
+                        int position, long id) {
 
-                    BucketEntry bucketEntry = (BucketEntry) adapter.getItemAtPosition(position);
-                    Intent selectImageIntent = new Intent(getActivity(), HomeFragmentActivity.class);
+                    BucketEntry bucketEntry = (BucketEntry)adapter.getItemAtPosition(position);
+                    Intent selectImageIntent = new Intent(getActivity(),HomeFragmentActivity.class);
                     selectImageIntent.putExtra("name", bucketEntry.bucketName);
                     selectImageIntent.putExtra("isFromBucket", true);
                     getActivity().startActivityForResult(selectImageIntent, MediaChooserConstants.BUCKET_SELECT_VIDEO_CODE);

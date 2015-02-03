@@ -17,6 +17,8 @@
 
 package com.learnncode.mediachooser.adapter;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +27,7 @@ import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.learnncode.mediachooser.BucketEntry;
 import com.learnncode.mediachooser.MediaChooserConstants;
 import com.learnncode.mediachooser.R;
@@ -33,24 +36,22 @@ import com.learnncode.mediachooser.async.MediaAsync;
 import com.learnncode.mediachooser.async.VideoLoadAsync;
 import com.learnncode.mediachooser.fragment.BucketVideoFragment;
 
-import java.util.ArrayList;
-
 public class BucketGridAdapter extends ArrayAdapter<BucketEntry> {
 
-    public BucketVideoFragment bucketVideoFragment;
+    public BucketVideoFragment bucketVideoFragment; 
 
     private Context mContext;
     private ArrayList<BucketEntry> mBucketEntryList;
     private boolean mIsFromVideo;
     private int mWidth;
     LayoutInflater viewInflater;
-
+    
 
     public BucketGridAdapter(Context context, int resource, ArrayList<BucketEntry> categories, boolean isFromVideo) {
         super(context, resource, categories);
         mBucketEntryList = categories;
-        mContext = context;
-        mIsFromVideo = isFromVideo;
+        mContext         = context;
+        mIsFromVideo     = isFromVideo;
         viewInflater = LayoutInflater.from(mContext);
     }
 
@@ -71,15 +72,15 @@ public class BucketGridAdapter extends ArrayAdapter<BucketEntry> {
     public void addLatestEntry(String url) {
         int count = mBucketEntryList.size();
         boolean success = false;
-        for (int i = 0; i < count; i++) {
-            if (mBucketEntryList.get(i).bucketName.equals(MediaChooserConstants.folderName)) {
+        for(int i = 0; i< count; i++){
+            if(mBucketEntryList.get(i).bucketName.equals(MediaChooserConstants.folderName)){
                 mBucketEntryList.get(i).bucketUrl = url;
                 success = true;
                 break;
             }
         }
 
-        if (!success) {
+        if(!success){
             BucketEntry latestBucketEntry = new BucketEntry(0, MediaChooserConstants.folderName, url);
             mBucketEntryList.add(0, latestBucketEntry);
         }
@@ -92,35 +93,36 @@ public class BucketGridAdapter extends ArrayAdapter<BucketEntry> {
 
         if (convertView == null) {
 
-            mWidth = mContext.getResources().getDisplayMetrics().widthPixels;
+            mWidth = mContext.getResources().getDisplayMetrics().widthPixels;  
 
-            convertView = viewInflater.inflate(R.layout.view_grid_bucket_item_media_chooser, parent, false);
+            convertView  = viewInflater.inflate(R.layout.view_grid_bucket_item_media_chooser, parent, false);
 
             holder = new ViewHolder();
-            holder.imageView = (ImageView) convertView.findViewById(R.id.imageViewFromMediaChooserBucketRowView);
+            holder.imageView    = (ImageView) convertView.findViewById(R.id.imageViewFromMediaChooserBucketRowView);
             holder.nameTextView = (TextView) convertView.findViewById(R.id.nameTextViewFromMediaChooserBucketRowView);
 
             convertView.setTag(holder);
 
-        } else {
+        }else{
             holder = (ViewHolder) convertView.getTag();
         }
 
         FrameLayout.LayoutParams imageParams = (FrameLayout.LayoutParams) holder.imageView.getLayoutParams();
-        imageParams.width = mWidth / 2;
-        imageParams.height = mWidth / 2;
+        imageParams.width  = mWidth/2;
+        imageParams.height = mWidth/2;
 
         holder.imageView.setLayoutParams(imageParams);
 
-        if (mIsFromVideo) {
-            new VideoLoadAsync(bucketVideoFragment, holder.imageView, false, mWidth / 2).executeOnExecutor(MediaAsync.THREAD_POOL_EXECUTOR, mBucketEntryList.get(position).bucketUrl.toString());
+        if(mIsFromVideo){
+            new VideoLoadAsync(bucketVideoFragment, holder.imageView, false, mWidth/2).
+                    executeOnExecutor(MediaAsync.THREAD_POOL_EXECUTOR, mBucketEntryList.get(position).bucketUrl);
 
-        } else {
-            ImageLoadAsync loadAsync = new ImageLoadAsync(mContext, holder.imageView, mWidth / 2);
-            loadAsync.executeOnExecutor(MediaAsync.THREAD_POOL_EXECUTOR, mBucketEntryList.get(position).bucketUrl);
+        }else{
+            new ImageLoadAsync(mContext, holder.imageView, mWidth/2)
+                    .executeOnExecutor(MediaAsync.THREAD_POOL_EXECUTOR, mBucketEntryList.get(position).bucketUrl);
         }
 
-        holder.nameTextView.setText(mBucketEntryList.get(position).bucketName);
+        holder.nameTextView.setText(mBucketEntryList.get(position).bucketName );
         return convertView;
     }
 

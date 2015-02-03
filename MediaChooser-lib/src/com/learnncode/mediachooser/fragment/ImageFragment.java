@@ -43,94 +43,94 @@ import com.learnncode.mediachooser.adapter.GridViewAdapter;
 
 
 public class ImageFragment extends Fragment {
-	private ArrayList<String> mSelectedItems = new ArrayList<String>();
-	private ArrayList<MediaModel> mGalleryModelList;
-	private GridView mImageGridView;
-	private View mView;
-	private OnImageSelectedListener mCallback;
-	private GridViewAdapter mImageAdapter;
-	private Cursor mImageCursor;
+    protected ArrayList<String> mSelectedItems = new ArrayList<String>();
+    private ArrayList<MediaModel> mGalleryModelList;
+    protected GridView mImageGridView;
+    private View mView;
+    protected OnImageSelectedListener mCallback;
+    private GridViewAdapter mImageAdapter;
+    private Cursor mImageCursor;
 
 
-	// Container Activity must implement this interface
-	public interface OnImageSelectedListener {
-		public void onImageSelected(int count);
-	}
+    // Container Activity must implement this interface
+    public interface OnImageSelectedListener {
+        public void onImageSelected(int count);
+    }
 
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
 
-		// This makes sure that the container activity has implemented
-		// the callback interface. If not, it throws an exception
-		try {
-			mCallback = (OnImageSelectedListener) activity;
-		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString() + " must implement OnImageSelectedListener");
-		}
-	}
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            mCallback = (OnImageSelectedListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement OnImageSelectedListener");
+        }
+    }
 
-	public ImageFragment(){
-		setRetainInstance(true);
-	}
-
-
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-		if(mView == null){
-			mView = inflater.inflate(R.layout.view_grid_layout_media_chooser, container, false);
-
-			mImageGridView = (GridView) mView.findViewById(R.id.gridViewFromMediaChooser);
+    public ImageFragment(){
+        setRetainInstance(true);
+    }
 
 
-			if (getArguments() != null) {
-				initPhoneImages(getArguments().getString("name"));
-			}else{
-				initPhoneImages();
-			}
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		}else{
-			((ViewGroup) mView.getParent()).removeView(mView);
-			if(mImageAdapter == null || mImageAdapter.getCount() == 0){
-				Toast.makeText(getActivity(), getActivity().getString(R.string.no_media_file_available), Toast.LENGTH_SHORT).show();
-			}
-		}
+        if(mView == null){
+            mView = inflater.inflate(R.layout.view_grid_layout_media_chooser, container, false);
 
-		return mView;
-	}
+            mImageGridView = (GridView) mView.findViewById(R.id.gridViewFromMediaChooser);
 
 
-	private void initPhoneImages(String bucketName){
-		try {
-			final String orderBy = MediaStore.Images.Media.DATE_TAKEN;
-			String searchParams = null;
-			String bucket = bucketName;
-			searchParams = "bucket_display_name = \"" + bucket + "\"";
+            if (getArguments() != null) {
+                initPhoneImages(getArguments().getString("name"));
+            }else{
+                initPhoneImages();
+            }
 
-			final String[] columns = { MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID};
-			mImageCursor = getActivity().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, searchParams, null, orderBy + " DESC");
+        }else{
+            ((ViewGroup) mView.getParent()).removeView(mView);
+            if(mImageAdapter == null || mImageAdapter.getCount() == 0){
+                Toast.makeText(getActivity(), getActivity().getString(R.string.no_media_file_available), Toast.LENGTH_SHORT).show();
+            }
+        }
 
-			setAdapter(mImageCursor);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void initPhoneImages() {
-		try {
-			final String orderBy = MediaStore.Images.Media.DATE_TAKEN;
-			final String[] columns = { MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID};
-			mImageCursor = getActivity().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, null, null, orderBy + " DESC");
-
-			setAdapter(mImageCursor);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+        return mView;
+    }
 
 
-	protected void setAdapter(Cursor imagecursor) {
+    private void initPhoneImages(String bucketName){
+        try {
+            final String orderBy = MediaStore.Images.Media.DATE_TAKEN;
+            String searchParams = null;
+            String bucket = bucketName;
+            searchParams = "bucket_display_name = \"" + bucket + "\"";
+
+            final String[] columns = { MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID};
+            mImageCursor = getActivity().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, searchParams, null, orderBy + " DESC");
+
+            setAdapter(mImageCursor);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void initPhoneImages() {
+        try {
+            final String orderBy = MediaStore.Images.Media.DATE_TAKEN;
+            final String[] columns = { MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID};
+            mImageCursor = getActivity().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, null, null, orderBy + " DESC");
+
+            setAdapter(mImageCursor);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    protected void setAdapter(Cursor imagecursor) {
 
         setupImageCursor(imagecursor);
 
@@ -191,7 +191,7 @@ public class ImageFragment extends Fragment {
 
 
                 if(! galleryModel.status){
-                    long size = MediaChooserConstants.ChekcMediaFileSize(new File(galleryModel.url.toString()), false);
+                    long size = MediaChooserConstants.CheckMediaFileSize(new File(galleryModel.url.toString()), false);
                     if(size != 0){
                         Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.file_size_exeeded) + "  " + MediaChooserConstants.SELECTED_IMAGE_SIZE_IN_MB + " " + getActivity().getResources().getString(R.string.mb), Toast.LENGTH_SHORT).show();
                         return;
@@ -235,16 +235,16 @@ public class ImageFragment extends Fragment {
     }
 
     public ArrayList<String> getSelectedImageList() {
-		return mSelectedItems;
-	}
+        return mSelectedItems;
+    }
 
-	public void addItem(String item) {
-		if(mImageAdapter != null){
-			MediaModel model = new MediaModel(item, false);
-			mGalleryModelList.add(0, model);
-			mImageAdapter.notifyDataSetChanged();
-		}else{
-			initPhoneImages();
-		}
-	}
+    public void addItem(String item) {
+        if(mImageAdapter != null){
+            MediaModel model = new MediaModel(item, false);
+            mGalleryModelList.add(0, model);
+            mImageAdapter.notifyDataSetChanged();
+        }else{
+            initPhoneImages();
+        }
+    }
 }

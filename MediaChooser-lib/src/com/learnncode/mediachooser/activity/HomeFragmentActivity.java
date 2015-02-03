@@ -18,6 +18,7 @@ package com.learnncode.mediachooser.activity;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import android.annotation.SuppressLint;
@@ -56,7 +57,9 @@ public class HomeFragmentActivity extends FragmentActivity implements ImageFragm
         VideoFragment.OnVideoSelectedListener{
 
 
-    private FragmentTabHost mTabHost;
+    public static final String TAB_IMAGE = "tab1";
+    public static final String TAB_VIDEO = "tab2";
+    protected FragmentTabHost mTabHost;
     private TextView headerBarTitle;
     private ImageView headerBarCamera;
     private ImageView headerBarBack;
@@ -118,68 +121,74 @@ public class HomeFragmentActivity extends FragmentActivity implements ImageFragm
 
         mTabHost.setup(this, getSupportFragmentManager(), R.id.realTabcontent);
 
-        if(getIntent() != null && (getIntent().getBooleanExtra("isFromBucket", false))){
+        if(getIntent() == null)
+            setIntent(new Intent());
+
+        if(getIntent().getBooleanExtra("isFromBucket", false)){
 
             if(getIntent().getBooleanExtra("image", false)){
                 setHeaderTitle(R.string.image, R.drawable.selector_camera_button);
 
                 Bundle bundle = new Bundle();
                 bundle.putString("name", getIntent().getStringExtra("name"));
-                mTabHost.addTab(mTabHost.newTabSpec("tab1").setIndicator(getResources().getString(R.string.images_tab) + "     "), getImageFragmentClass(), bundle);
+                mTabHost.addTab(mTabHost.newTabSpec(TAB_IMAGE).setIndicator(getResources().getString(R.string.images_tab) + "     "), getImageFragmentClass(), bundle);
 
             }else{
                 setHeaderTitle(R.string.video, R.drawable.selector_video_button);
 
                 Bundle bundle = new Bundle();
                 bundle.putString("name", getIntent().getStringExtra("name"));
-                mTabHost.addTab(mTabHost.newTabSpec("tab2").setIndicator(getResources().getString(R.string.videos_tab) + "      "), getVideoFragmentClass(), bundle);
+                mTabHost.addTab(mTabHost.newTabSpec(TAB_VIDEO).setIndicator(getResources().getString(R.string.videos_tab) + "      "), getVideoFragmentClass(), bundle);
             }
         }else{
 
-            if(MediaChooserConstants.showVideo){
-                mTabHost.addTab(mTabHost.newTabSpec("tab2").setIndicator(getResources().getString(R.string.videos_tab) + "      "), getVideoFragmentClass(), null);
+            if(getIntent().getBooleanExtra("showVideo", MediaChooserConstants.showVideo)){
+                setHeaderTitle(R.string.video, R.drawable.selector_video_button);
+
+                mTabHost.addTab(mTabHost.newTabSpec(TAB_VIDEO).setIndicator(getResources().getString(R.string.videos_tab) + "      "), getVideoFragmentClass(), null);
             }
 
-            if(MediaChooserConstants.showImage){
+            if(getIntent().getBooleanExtra("showImage", MediaChooserConstants.showImage)){
                 setHeaderTitle(R.string.image, R.drawable.selector_camera_button);
 
-                mTabHost.addTab(mTabHost.newTabSpec("tab1").setIndicator(getResources().getString(R.string.images_tab) + "      "), getImageFragmentClass(), null);
-            }
-
-            if(MediaChooserConstants.showVideo){
-                setHeaderTitle(R.string.video, R.drawable.selector_video_button);
+                mTabHost.addTab(mTabHost.newTabSpec(TAB_IMAGE).setIndicator(getResources().getString(R.string.images_tab) + "      "), getImageFragmentClass(), null);
             }
         }
 
         for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {
 
-            TextView textView = (TextView) mTabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
-            if(textView.getLayoutParams() instanceof RelativeLayout.LayoutParams){
-
-                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) textView.getLayoutParams();
-                params.addRule(RelativeLayout.CENTER_HORIZONTAL);
-                params.addRule(RelativeLayout.CENTER_VERTICAL);
-                params.height = RelativeLayout.LayoutParams.MATCH_PARENT;
-                params.width  = RelativeLayout.LayoutParams.WRAP_CONTENT;
-                textView.setLayoutParams(params);
-
-            }else if(textView.getLayoutParams() instanceof LinearLayout.LayoutParams){
-                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) textView.getLayoutParams();
-                params.gravity = Gravity.CENTER;
-                textView.setLayoutParams(params);
-            }
-            textView.setTextColor(getResources().getColor(R.color.tabs_title_color));
-            textView.setTextSize(convertDipToPixels(10));
+            setupTabTitle(i);
 
         }
 
         if((mTabHost.getTabWidget().getChildAt(0) != null)){
-            ((TextView)(mTabHost.getTabWidget().getChildAt(0).findViewById(android.R.id.title))).setTextColor(Color.WHITE);
+            changeTabTitleUnselected(0);
         }
 
         if((mTabHost.getTabWidget().getChildAt(1) != null)){
-            ((TextView)(mTabHost.getTabWidget().getChildAt(1).findViewById(android.R.id.title))).setTextColor(getResources().getColor(R.color.headerbar_selected_tab_color));
+            changeTabTitleSelected(1);
         }
+    }
+
+    protected void setupTabTitle(int i) {
+        TextView textView = (TextView) mTabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
+        if(textView.getLayoutParams() instanceof RelativeLayout.LayoutParams){
+
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) textView.getLayoutParams();
+            params.addRule(RelativeLayout.CENTER_HORIZONTAL);
+            params.addRule(RelativeLayout.CENTER_VERTICAL);
+            params.height = RelativeLayout.LayoutParams.WRAP_CONTENT;
+            params.width  = RelativeLayout.LayoutParams.WRAP_CONTENT;
+            textView.setGravity(Gravity.CENTER);
+            textView.setLayoutParams(params);
+
+        }else if(textView.getLayoutParams() instanceof LinearLayout.LayoutParams){
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) textView.getLayoutParams();
+            params.gravity = Gravity.CENTER;
+            textView.setLayoutParams(params);
+        }
+        textView.setTextColor(getResources().getColor(R.color.tabs_title_color));
+        textView.setTextSize(convertDipToPixels(10));
     }
 
     protected Class<? extends VideoFragment> getVideoFragmentClass() {
@@ -197,12 +206,12 @@ public class HomeFragmentActivity extends FragmentActivity implements ImageFragm
             public void onTabChanged(String tabId) {
 
                 android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-                ImageFragment imageFragment  = (ImageFragment) fragmentManager.findFragmentByTag("tab1");
-                VideoFragment videoFragment  = (VideoFragment) fragmentManager.findFragmentByTag("tab2");
+                ImageFragment imageFragment  = (ImageFragment) fragmentManager.findFragmentByTag(TAB_IMAGE);
+                VideoFragment videoFragment  = (VideoFragment) fragmentManager.findFragmentByTag(TAB_VIDEO);
                 android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
 
-                if(tabId.equalsIgnoreCase("tab1")){
+                if(tabId.equalsIgnoreCase(TAB_IMAGE)){
                     setHeaderTitle(R.string.image, R.drawable.selector_camera_button);
 
                     if(imageFragment != null){
@@ -212,8 +221,8 @@ public class HomeFragmentActivity extends FragmentActivity implements ImageFragm
                         }
                         fragmentTransaction.show(imageFragment);
                     }
-                    ((TextView)(mTabHost.getTabWidget().getChildAt(0).findViewById(android.R.id.title))).setTextColor(getResources().getColor(R.color.headerbar_selected_tab_color));
-                    ((TextView)(mTabHost.getTabWidget().getChildAt(1).findViewById(android.R.id.title))).setTextColor(Color.WHITE);
+                    changeTabTitleSelected(0);
+                    changeTabTitleUnselected(1);
 
                 }else{
                     setHeaderTitle(R.string.video, R.drawable.selector_video_button);
@@ -229,13 +238,21 @@ public class HomeFragmentActivity extends FragmentActivity implements ImageFragm
                             videoFragment.getAdapter().notifyDataSetChanged();
                         }
                     }
-                    ((TextView)(mTabHost.getTabWidget().getChildAt(0).findViewById(android.R.id.title))).setTextColor(Color.WHITE);
-                    ((TextView)(mTabHost.getTabWidget().getChildAt(1).findViewById(android.R.id.title))).setTextColor(getResources().getColor(R.color.headerbar_selected_tab_color));
+                    changeTabTitleSelected(1);
+                    changeTabTitleUnselected(0);
                 }
 
                 fragmentTransaction.commit();
             }
         });
+    }
+
+    protected void changeTabTitleUnselected(int tabNumber) {
+        ((TextView)(mTabHost.getTabWidget().getChildAt(tabNumber).findViewById(android.R.id.title))).setTextColor(Color.WHITE);
+    }
+
+    protected void changeTabTitleSelected(int tabNumber) {
+        ((TextView)(mTabHost.getTabWidget().getChildAt(tabNumber).findViewById(android.R.id.title))).setTextColor(getResources().getColor(R.color.headerbar_selected_tab_color));
     }
 
     OnClickListener clickListener = new OnClickListener() {
@@ -263,8 +280,8 @@ public class HomeFragmentActivity extends FragmentActivity implements ImageFragm
             }else if(view == headerBarDone){
 
                 android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-                ImageFragment imageFragment = (ImageFragment) fragmentManager.findFragmentByTag("tab1");
-                VideoFragment videoFragment = (VideoFragment) fragmentManager.findFragmentByTag("tab2");
+                ImageFragment imageFragment = (ImageFragment) fragmentManager.findFragmentByTag(TAB_IMAGE);
+                VideoFragment videoFragment = (VideoFragment) fragmentManager.findFragmentByTag(TAB_VIDEO);
 
                 if(videoFragment != null || imageFragment != null){
 
@@ -341,7 +358,7 @@ public class HomeFragmentActivity extends FragmentActivity implements ImageFragm
                         //Do something after 5000ms
                         String fileUriString = fileUri.toString().replaceFirst("file:///", "/").trim();
                         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-                        VideoFragment videoFragment = (VideoFragment) fragmentManager.findFragmentByTag("tab2");
+                        VideoFragment videoFragment = (VideoFragment) fragmentManager.findFragmentByTag(TAB_VIDEO);
                         //
                         if(videoFragment == null){
                             VideoFragment newVideoFragment = new VideoFragment();
@@ -373,7 +390,7 @@ public class HomeFragmentActivity extends FragmentActivity implements ImageFragm
                         //Do something after 5000ms
                         String fileUriString = fileUri.toString().replaceFirst("file:///", "/").trim();
                         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-                        ImageFragment imageFragment = (ImageFragment) fragmentManager.findFragmentByTag("tab1");
+                        ImageFragment imageFragment = (ImageFragment) fragmentManager.findFragmentByTag(TAB_IMAGE);
                         if(imageFragment == null){
                             ImageFragment newImageFragment = new ImageFragment();
                             newImageFragment.addItem(fileUriString);
@@ -407,8 +424,6 @@ public class HomeFragmentActivity extends FragmentActivity implements ImageFragm
         }
     }
 
-
-    @Override
     public void onVideoSelected(int count){
         if(count != 0){
             ((TextView) mTabHost.getTabWidget().getChildAt(0).findViewById(android.R.id.title)).setText(getResources().getString(R.string.videos_tab) + "  "  + count);
@@ -416,6 +431,10 @@ public class HomeFragmentActivity extends FragmentActivity implements ImageFragm
         }else{
             ((TextView)mTabHost.getTabWidget().getChildAt(0).findViewById(android.R.id.title)).setText(getResources().getString(R.string.video));
         }
+    }
+
+    public void onVideoSelected(ArrayList<String> items) {
+
     }
 
     @SuppressLint("NewApi")

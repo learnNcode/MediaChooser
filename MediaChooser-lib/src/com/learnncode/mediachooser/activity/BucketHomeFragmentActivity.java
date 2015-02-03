@@ -112,7 +112,7 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
         headerBarCamera.setBackgroundResource(id_image);
         headerBarCamera.setTag(getResources().getString(id_text));
     }
-    
+
     protected void setupUI() {
         mTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
 
@@ -124,13 +124,13 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
 
         if (MediaChooserConstants.showVideo) {
             mTabHost.addTab(
-                    mTabHost.newTabSpec("tab2").setIndicator(getResources().getString(R.string.videos_tab) + "      "),
+                    mTabHost.newTabSpec(HomeFragmentActivity.TAB_VIDEO).setIndicator(getResources().getString(R.string.videos_tab) + "      "),
                     BucketVideoFragment.class, null);
         }
 
         if (MediaChooserConstants.showImage) {
             mTabHost.addTab(
-                    mTabHost.newTabSpec("tab1").setIndicator(getResources().getString(R.string.images_tab) + "      "),
+                    mTabHost.newTabSpec(HomeFragmentActivity.TAB_IMAGE).setIndicator(getResources().getString(R.string.images_tab) + "      "),
                     BucketImageFragment.class, null);
         }
 
@@ -171,16 +171,16 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
             public void onTabChanged(String tabId) {
 
                 android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-                BucketImageFragment imageFragment = (BucketImageFragment) fragmentManager.findFragmentByTag("tab1");
-                BucketVideoFragment videoFragment = (BucketVideoFragment) fragmentManager.findFragmentByTag("tab2");
+                BucketImageFragment imageFragment = (BucketImageFragment) fragmentManager.findFragmentByTag(HomeFragmentActivity.TAB_IMAGE);
+                BucketVideoFragment videoFragment = (BucketVideoFragment) fragmentManager.findFragmentByTag(HomeFragmentActivity.TAB_VIDEO);
                 android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-                if (tabId.equalsIgnoreCase("tab1")) {
+                if (tabId.equalsIgnoreCase(HomeFragmentActivity.TAB_IMAGE)) {
                     setHeaderTitle(R.string.image, R.drawable.selector_camera_button);
 
                     if (imageFragment == null) {
                         BucketImageFragment newImageFragment = new BucketImageFragment();
-                        fragmentTransaction.add(R.id.realTabcontent, newImageFragment, "tab1");
+                        fragmentTransaction.add(R.id.realTabcontent, newImageFragment, HomeFragmentActivity.TAB_IMAGE);
 
                     } else {
 
@@ -200,7 +200,7 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
                     if (videoFragment == null) {
 
                         final BucketVideoFragment newVideoFragment = new BucketVideoFragment();
-                        fragmentTransaction.add(R.id.realTabcontent, newVideoFragment, "tab2");
+                        fragmentTransaction.add(R.id.realTabcontent, newVideoFragment, HomeFragmentActivity.TAB_VIDEO);
 
                     } else {
 
@@ -332,7 +332,7 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
                         //Do something after 2000ms
                         String fileUriString = fileUri.toString().replaceFirst("file:///", "/").trim();
                         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-                        BucketImageFragment bucketImageFragment = (BucketImageFragment) fragmentManager.findFragmentByTag("tab1");
+                        BucketImageFragment bucketImageFragment = (BucketImageFragment) fragmentManager.findFragmentByTag(HomeFragmentActivity.TAB_IMAGE);
                         if (bucketImageFragment != null) {
                             bucketImageFragment.getAdapter().addLatestEntry(fileUriString);
                             bucketImageFragment.getAdapter().notifyDataSetChanged();
@@ -354,7 +354,7 @@ public class BucketHomeFragmentActivity extends FragmentActivity {
                         //Do something after 2000ms
                         String fileUriString = fileUri.toString().replaceFirst("file:///", "/").trim();
                         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-                        BucketVideoFragment bucketVideoFragment = (BucketVideoFragment) fragmentManager.findFragmentByTag("tab2");
+                        BucketVideoFragment bucketVideoFragment = (BucketVideoFragment) fragmentManager.findFragmentByTag(HomeFragmentActivity.TAB_VIDEO);
                         if (bucketVideoFragment != null) {
                             bucketVideoFragment.getAdapter().addLatestEntry(fileUriString);
                             bucketVideoFragment.getAdapter().notifyDataSetChanged();

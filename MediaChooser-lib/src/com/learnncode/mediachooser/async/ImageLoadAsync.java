@@ -17,23 +17,24 @@
 
 package com.learnncode.mediachooser.async;
 
+import java.io.File;
+
 import android.content.Context;
 import android.widget.ImageView;
+
 import com.learnncode.mediachooser.R;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
-
-public class ImageLoadAsync extends MediaAsync<String, String, String> {
+public class ImageLoadAsync extends MediaAsync<String,String, String>{
 
     private ImageView mImageView;
     private Context mContext;
     private int mWidth;
 
-    public ImageLoadAsync(Context context, ImageView imageView, int width) {
+    public ImageLoadAsync(Context context,ImageView imageView, int width) {
         mImageView = imageView;
-        mContext = context;
-        mWidth = width;
+        mContext   = context;
+        mWidth     = width;
     }
 
     @Override
@@ -45,10 +46,10 @@ public class ImageLoadAsync extends MediaAsync<String, String, String> {
     @Override
     protected void onPostExecute(String result) {
         Picasso.with(mContext)
-                .load(new File(result))
-                .resize(mWidth, mWidth)
-                .centerCrop().placeholder(R.drawable.ic_loading)
-                .into(mImageView);
+        .load(new File(result))
+        .resize(mWidth, mWidth)
+        .centerCrop().placeholder(R.drawable.ic_loading)
+        .into(mImageView);
 
     }
 

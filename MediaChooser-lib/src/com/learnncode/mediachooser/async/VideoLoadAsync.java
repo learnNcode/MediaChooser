@@ -15,16 +15,18 @@
  */
 
 
+
 package com.learnncode.mediachooser.async;
 
 import android.app.ActivityManager;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.widget.ImageView;
+
 import com.learnncode.mediachooser.GalleryCache;
 import com.learnncode.mediachooser.GalleryRetainCache;
 
-public class VideoLoadAsync extends MediaAsync<String, String, String> {
+public class VideoLoadAsync extends MediaAsync<String,String, String>{
 
     public Fragment fragment;
 
@@ -35,10 +37,10 @@ public class VideoLoadAsync extends MediaAsync<String, String, String> {
 
 
     public VideoLoadAsync(Fragment fragment, ImageView imageView, boolean isScrolling, int width) {
-        mImageView = imageView;
+        mImageView    = imageView;
         this.fragment = fragment;
-        mWidth = width;
-        mIsScrolling = isScrolling;
+        mWidth        = width;
+        mIsScrolling  = isScrolling;
 
         final int memClass = ((ActivityManager) fragment.getActivity().getSystemService(Context.ACTIVITY_SERVICE))
                 .getMemoryClass();
@@ -52,8 +54,8 @@ public class VideoLoadAsync extends MediaAsync<String, String, String> {
             // The maximum bitmap pixels allowed in respective direction.
             // If exceeding, the cache will automatically scale the
             // bitmaps.
-            /*	final int MAX_PIXELS_WIDTH  = 100;
-			final int MAX_PIXELS_HEIGHT = 100;*/
+            /*    final int MAX_PIXELS_WIDTH  = 100;
+            final int MAX_PIXELS_HEIGHT = 100;*/
             mCache = new GalleryCache(size, mWidth, mWidth);
             c.mRetainedCache = mCache;
         }
