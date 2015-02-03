@@ -114,11 +114,12 @@ public class BucketGridAdapter extends ArrayAdapter<BucketEntry> {
 		holder.imageView.setLayoutParams(imageParams);
 
 		if(mIsFromVideo){
-			new VideoLoadAsync(bucketVideoFragment, holder.imageView, false, mWidth/2).executeOnExecutor(MediaAsync.THREAD_POOL_EXECUTOR, mBucketEntryList.get(position).bucketUrl.toString());
+			new VideoLoadAsync(bucketVideoFragment, holder.imageView, false, mWidth/2).
+                    executeOnExecutor(MediaAsync.THREAD_POOL_EXECUTOR, mBucketEntryList.get(position).bucketUrl);
 
 		}else{
-			ImageLoadAsync loadAsync = new ImageLoadAsync(mContext, holder.imageView, mWidth/2);
-			loadAsync.executeOnExecutor(MediaAsync.THREAD_POOL_EXECUTOR, mBucketEntryList.get(position).bucketUrl);
+			new ImageLoadAsync(mContext, holder.imageView, mWidth/2)
+                    .executeOnExecutor(MediaAsync.THREAD_POOL_EXECUTOR, mBucketEntryList.get(position).bucketUrl);
 		}
 
 		holder.nameTextView.setText(mBucketEntryList.get(position).bucketName );

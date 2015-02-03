@@ -3,6 +3,8 @@ package com.learnncode.mediachooser;
 import java.util.ArrayList;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.RectF;
 import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
 import android.provider.MediaStore.Video.Thumbnails;
@@ -21,9 +23,13 @@ public class GalleryCache {
 	private LruCache<String, Bitmap> mBitmapCache;
 	private ArrayList<String> mCurrentTasks;
 	private int mMaxWidth;
+    private int mMaxHeight;
+    private float mRelation;
 
 	public GalleryCache(int size, int maxWidth, int maxHeight) {
 		mMaxWidth = maxWidth;
+        mMaxHeight = maxHeight;
+        mRelation = (float) maxWidth / maxHeight;
 
 		mBitmapCache = new LruCache<String, Bitmap>(size) {
 			@Override
@@ -79,6 +85,8 @@ public class GalleryCache {
 
 		if (bitmap != null) {
 			imageView.setImageBitmap(bitmap);
+            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+            imageView.setAdjustViewBounds(true);
 		} else {
 			imageView.setImageResource(R.drawable.ic_loading);
 			//			imageView.setImageResource(R.drawable.transprent_drawable);
@@ -115,6 +123,40 @@ public class GalleryCache {
 			mCurrentTasks.add(mImageKey);
 		}
 
+        //http://stackoverflow.com/questions/8112715/how-to-crop-bitmap-center-like-imageview
+        public Bitmap scaleCenterCrop(Bitmap source, int newWidth, int newHeight) {
+            int sourceWidth = source.getWidth();
+            int sourceHeight = source.getHeight();
+
+            // Compute the scaling factors to fit the new height and width, respectively.
+            // To cover the final image, the final scaling will be the bigger
+            // of these two.
+            float xScale = (float) newWidth / sourceWidth;
+            float yScale = (float) newHeight / sourceHeight;
+            float scale = Math.max(xScale, yScale);
+
+            // Now get the size of the source bitmap when scaled
+            float scaledWidth = scale * sourceWidth;
+            float scaledHeight = scale * sourceHeight;
+
+            // Let's find out the upper left coordinates if the scaled bitmap
+            // should be centered in the new size give by the parameters
+            float left = (newWidth - scaledWidth) / 2;
+            float top = (newHeight - scaledHeight) / 2;
+
+            // The target rectangle for the new, scaled version of the source bitmap will now
+            // be
+            RectF targetRect = new RectF(left, top, left + scaledWidth, top + scaledHeight);
+
+            // Finally, we create a new bitmap of the specified size and draw our new,
+            // scaled bitmap onto it.
+            Bitmap dest = Bitmap.createBitmap(newWidth, newHeight, source.getConfig());
+            Canvas canvas = new Canvas(dest);
+            canvas.drawBitmap(source, null, targetRect, null);
+
+            return dest;
+        }
+
 		@Override
 		protected Bitmap doInBackground(Void... params) {
 			Bitmap bitmap = null;
@@ -122,7 +164,19 @@ public class GalleryCache {
 				bitmap = ThumbnailUtils.createVideoThumbnail(mImageKey, Thumbnails.FULL_SCREEN_KIND);
 
 				if (bitmap != null) {
-					bitmap = Bitmap.createScaledBitmap(bitmap, mMaxWidth, mMaxWidth, false);
+/*
+                    int originalHeight = bitmap.getHeight();
+                    int originalWidth = bitmap.getWidth();
+                    if(originalHeight > originalWidth) {
+                        int scaled = originalHeight * mMaxWidth / originalWidth;
+                        bitmap = Bitmap.createScaledBitmap(bitmap, mMaxWidth, scaled, true);
+                    } else {
+                        int scaled = originalWidth * mMaxHeight / originalHeight;
+                        bitmap = Bitmap.createScaledBitmap(bitmap, scaled, mMaxHeight, true);
+                    }
+                    */
+                    bitmap = scaleCenterCrop(bitmap, mMaxWidth, mMaxHeight);
+
 					addBitmapToCache(mImageKey, bitmap);
 					return bitmap;
 				}

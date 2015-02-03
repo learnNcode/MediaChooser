@@ -1,0 +1,9 @@
+.idea
+*/gen
+*/*.iml
+
+mediaChooser-sample/bin
+mediaChooser-sample/gen
+MediaChooser-lib/bin
+MediaChooser-lib/gen
+

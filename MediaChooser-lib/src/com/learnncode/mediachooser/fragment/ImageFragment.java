@@ -43,11 +43,11 @@ import com.learnncode.mediachooser.adapter.GridViewAdapter;
 
 
 public class ImageFragment extends Fragment {
-	private ArrayList<String> mSelectedItems = new ArrayList<String>();
+	protected ArrayList<String> mSelectedItems = new ArrayList<String>();
 	private ArrayList<MediaModel> mGalleryModelList;
-	private GridView mImageGridView;
+	protected GridView mImageGridView;
 	private View mView;
-	private OnImageSelectedListener mCallback;
+	protected OnImageSelectedListener mCallback;
 	private GridViewAdapter mImageAdapter;
 	private Cursor mImageCursor;
 
@@ -130,96 +130,111 @@ public class ImageFragment extends Fragment {
 	}
 
 
-	private void setAdapter(Cursor imagecursor) {
+	protected void setAdapter(Cursor imagecursor) {
 
-		if(imagecursor.getCount() > 0){
+        setupImageCursor(imagecursor);
 
-			mGalleryModelList = new ArrayList<MediaModel>();
+        setupOnItemLongClickListener();
 
-			for (int i = 0; i < imagecursor.getCount(); i++) {
-				imagecursor.moveToPosition(i);
-				int dataColumnIndex       = imagecursor.getColumnIndex(MediaStore.Images.Media.DATA);
-				MediaModel galleryModel   = new MediaModel(imagecursor.getString(dataColumnIndex).toString(), false);
-				mGalleryModelList.add(galleryModel);
-			}
+        setupOnItemClickListener();
+    }
+
+    protected void setupImageCursor(Cursor imagecursor) {
+        if(imagecursor.getCount() > 0){
+
+            setupGalleryModelList(imagecursor);
+
+            mImageAdapter = new GridViewAdapter(getActivity(), 0, mGalleryModelList, false);
+            mImageGridView.setAdapter(mImageAdapter);
+        }else{
+            Toast.makeText(getActivity(), getActivity().getString(R.string.no_media_file_available), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    protected void setupGalleryModelList(Cursor imagecursor) {
+        mGalleryModelList = new ArrayList<MediaModel>();
+
+        for (int i = 0; i < imagecursor.getCount(); i++) {
+            imagecursor.moveToPosition(i);
+            int dataColumnIndex       = imagecursor.getColumnIndex(MediaStore.Images.Media.DATA);
+            MediaModel galleryModel   = new MediaModel(imagecursor.getString(dataColumnIndex).toString(), false);
+            mGalleryModelList.add(galleryModel);
+        }
+    }
+
+    protected void setupOnItemLongClickListener() {
+        mImageGridView.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+                GridViewAdapter adapter = (GridViewAdapter) parent.getAdapter();
+                MediaModel galleryModel = (MediaModel) adapter.getItem(position);
+                File file = new File(galleryModel.url);
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(Uri.fromFile(file), "image/*");
+                startActivity(intent);
+                return true;
+            }
+        });
+    }
+
+    protected void setupOnItemClickListener() {
+        mImageGridView.setOnItemClickListener(new OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent,
+                    View view, int position, long id) {
+                // update the mStatus of each category in the adapter
+                GridViewAdapter adapter = (GridViewAdapter) parent.getAdapter();
+                MediaModel galleryModel = (MediaModel) adapter.getItem(position);
 
 
-			mImageAdapter = new GridViewAdapter(getActivity(), 0, mGalleryModelList, false);
-			mImageGridView.setAdapter(mImageAdapter);
-		}else{
-			Toast.makeText(getActivity(), getActivity().getString(R.string.no_media_file_available), Toast.LENGTH_SHORT).show();
-		}
-		
-		mImageGridView.setOnItemLongClickListener(new OnItemLongClickListener() {
+                if(! galleryModel.status){
+                    long size = MediaChooserConstants.CheckMediaFileSize(new File(galleryModel.url.toString()), false);
+                    if(size != 0){
+                        Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.file_size_exeeded) + "  " + MediaChooserConstants.SELECTED_IMAGE_SIZE_IN_MB + " " + getActivity().getResources().getString(R.string.mb), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
-			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				
-				GridViewAdapter adapter = (GridViewAdapter) parent.getAdapter();
-				MediaModel galleryModel = (MediaModel) adapter.getItem(position);
-				File file = new File(galleryModel.url);
-				Intent intent = new Intent(Intent.ACTION_VIEW);
-				intent.setDataAndType(Uri.fromFile(file), "image/*");
-				startActivity(intent);
-				return true;
-			}
-		});
+                    if((MediaChooserConstants.MAX_MEDIA_LIMIT == MediaChooserConstants.SELECTED_MEDIA_COUNT)){
+                        if (MediaChooserConstants.SELECTED_MEDIA_COUNT < 2) {
+                            Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.max_limit_file) + "  " + MediaChooserConstants.SELECTED_MEDIA_COUNT + " " +  getActivity().getResources().getString(R.string.file), Toast.LENGTH_SHORT).show();
+                            return;
+                        } else {
+                            Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.max_limit_file) + "  " + MediaChooserConstants.SELECTED_MEDIA_COUNT + " " +  getActivity().getResources().getString(R.string.files), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
 
-		mImageGridView.setOnItemClickListener(new OnItemClickListener() {
+                    }
+                }
 
-			@Override
-			public void onItemClick(AdapterView<?> parent,
-					View view, int position, long id) {
-				// update the mStatus of each category in the adapter
-				GridViewAdapter adapter = (GridViewAdapter) parent.getAdapter();
-				MediaModel galleryModel = (MediaModel) adapter.getItem(position);
+                // inverse the status
+                galleryModel.status = ! galleryModel.status;
 
+                adapter.notifyDataSetChanged();
 
-				if(! galleryModel.status){
-					long size = MediaChooserConstants.ChekcMediaFileSize(new File(galleryModel.url.toString()), false);
-					if(size != 0){
-						Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.file_size_exeeded) + "  " + MediaChooserConstants.SELECTED_IMAGE_SIZE_IN_MB + " " +  getActivity().getResources().getString(R.string.mb), Toast.LENGTH_SHORT).show();
-						return;
-					}
+                if (galleryModel.status) {
+                    mSelectedItems.add(galleryModel.url.toString());
+                    MediaChooserConstants.SELECTED_MEDIA_COUNT ++;
 
-					if((MediaChooserConstants.MAX_MEDIA_LIMIT == MediaChooserConstants.SELECTED_MEDIA_COUNT)){
-						if (MediaChooserConstants.SELECTED_MEDIA_COUNT < 2) {
-							Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.max_limit_file) + "  " + MediaChooserConstants.SELECTED_MEDIA_COUNT + " " +  getActivity().getResources().getString(R.string.file), Toast.LENGTH_SHORT).show();
-							return;
-						} else {
-							Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.max_limit_file) + "  " + MediaChooserConstants.SELECTED_MEDIA_COUNT + " " +  getActivity().getResources().getString(R.string.files), Toast.LENGTH_SHORT).show();
-							return;
-						}
+                }else{
+                    mSelectedItems.remove(galleryModel.url.toString().trim());
+                    MediaChooserConstants.SELECTED_MEDIA_COUNT --;
+                }
 
-					}
-				}
+                if (mCallback != null) {
+                    mCallback.onImageSelected(mSelectedItems.size());
+                    Intent intent = new Intent();
+                    intent.putStringArrayListExtra("list", mSelectedItems);
+                    getActivity().setResult(Activity.RESULT_OK, intent);
+                }
 
-				// inverse the status
-				galleryModel.status = ! galleryModel.status;
+            }
+        });
+    }
 
-				adapter.notifyDataSetChanged();
-
-				if (galleryModel.status) {
-					mSelectedItems.add(galleryModel.url.toString());
-					MediaChooserConstants.SELECTED_MEDIA_COUNT ++;
-
-				}else{
-					mSelectedItems.remove(galleryModel.url.toString().trim());
-					MediaChooserConstants.SELECTED_MEDIA_COUNT --;
-				}
-
-				if (mCallback != null) {
-					mCallback.onImageSelected(mSelectedItems.size());
-					Intent intent = new Intent();
-					intent.putStringArrayListExtra("list", mSelectedItems);
-					getActivity().setResult(Activity.RESULT_OK, intent);
-				}
-
-			}
-		});
-	}
-
-	public ArrayList<String> getSelectedImageList() {
+    public ArrayList<String> getSelectedImageList() {
 		return mSelectedItems;
 	}
 

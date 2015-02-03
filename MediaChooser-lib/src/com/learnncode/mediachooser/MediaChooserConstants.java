@@ -59,7 +59,7 @@ public class MediaChooserConstants {
 	public static final int CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE = 200;
 
 	
-	public static long ChekcMediaFileSize(File mediaFile, boolean isVideo){
+	public static long CheckMediaFileSize(File mediaFile, boolean isVideo){
 
 		/** Get length of file in bytes */
 		long fileSizeInBytes = mediaFile.length();

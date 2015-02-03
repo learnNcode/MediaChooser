@@ -46,23 +46,25 @@ import com.learnncode.mediachooser.adapter.GridViewAdapter;
 
 public class VideoFragment extends Fragment implements OnScrollListener {
 
-	private final static Uri MEDIA_EXTERNAL_CONTENT_URI = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-	private final static String MEDIA_DATA = MediaStore.Video.Media.DATA;
+	public final static Uri MEDIA_EXTERNAL_CONTENT_URI = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+    public final static String MEDIA_DATA = MediaStore.Video.Media.DATA;
 
 	private GridViewAdapter mVideoAdapter;
-	private GridView mVideoGridView;
-	private Cursor mCursor;
+    protected GridView mVideoGridView;
+	protected Cursor mCursor;
 	private int mDataColumnIndex;
-	private ArrayList<String> mSelectedItems = new ArrayList<String>();
+	protected ArrayList<String> mSelectedItems = new ArrayList<String>();
 	private ArrayList<MediaModel> mGalleryModelList;
 	private View mView;
-	private OnVideoSelectedListener mCallback;
+	protected OnVideoSelectedListener mCallback;
 
 
 	// Container Activity must implement this interface
 	public interface OnVideoSelectedListener {
 		public void onVideoSelected(int count);
-	}
+
+        void onVideoSelected(ArrayList<String> mSelectedItems);
+    }
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -90,7 +92,7 @@ public class VideoFragment extends Fragment implements OnScrollListener {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 		if(mView == null){
-			mView = inflater.inflate(R.layout.view_grid_layout_media_chooser, container, false);
+			mView = inflater.inflate(getGridLayoutResource(), container, false);
 
 			mVideoGridView = (GridView)mView.findViewById(R.id.gridViewFromMediaChooser);
 
@@ -108,8 +110,11 @@ public class VideoFragment extends Fragment implements OnScrollListener {
 		}
 
 		return mView;
-	};
+	}
 
+    protected int getGridLayoutResource() {
+        return R.layout.view_grid_layout_media_chooser;
+    }
 
 	private void initVideos(String bucketName) {
 
@@ -142,99 +147,113 @@ public class VideoFragment extends Fragment implements OnScrollListener {
 
 	}
 
-	private void setAdapter() {
-		int count = mCursor.getCount();
+	protected void setAdapter() {
+        setupCursor();
 
-		if(count > 0){
-			mDataColumnIndex = mCursor.getColumnIndex(MEDIA_DATA);
+        setupOnItemLongClickListener();
 
-			//move position to first element
-			mCursor.moveToFirst();
+        setupOnItemClickListener();
 
-			mGalleryModelList = new ArrayList<MediaModel>();
-			for(int i= 0; i < count; i++) {
-				mCursor.moveToPosition(i);
-				String url = mCursor.getString(mDataColumnIndex);
-				mGalleryModelList.add(new MediaModel(url, false));
-			}
+    }
 
+    protected void setupCursor() {
+        int count = mCursor.getCount();
 
-			mVideoAdapter =  new GridViewAdapter(getActivity(), 0, mGalleryModelList, true);
-			mVideoAdapter.videoFragment = this;
-			mVideoGridView.setAdapter(mVideoAdapter);
-			mVideoGridView.setOnScrollListener(this);
-		}else{
-			Toast.makeText(getActivity(), getActivity().getString(R.string.no_media_file_available), Toast.LENGTH_SHORT).show();
+        if(count > 0){
+            mDataColumnIndex = mCursor.getColumnIndex(MEDIA_DATA);
 
-		}
+            //move position to first element
+            mCursor.moveToFirst();
 
+            setupGalleryModelList(count);
 
-		mVideoGridView.setOnItemLongClickListener(new OnItemLongClickListener() {
+            mVideoAdapter =  new GridViewAdapter(getActivity(), 0, mGalleryModelList, true);
+            mVideoAdapter.videoFragment = this;
+            mVideoGridView.setAdapter(mVideoAdapter);
+            mVideoGridView.setOnScrollListener(this);
+        }else{
+            Toast.makeText(getActivity(), getActivity().getString(R.string.no_media_file_available), Toast.LENGTH_SHORT).show();
 
-			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				GridViewAdapter adapter = (GridViewAdapter) parent.getAdapter();
-				MediaModel galleryModel = (MediaModel) adapter.getItem(position);
-				File file = new File(galleryModel.url);
-				Intent intent = new Intent(Intent.ACTION_VIEW);
-				intent.setDataAndType(Uri.fromFile(file), "video/*");
-				startActivity(intent);
-				return false;
-			}
-		});
+        }
+    }
 
-		mVideoGridView.setOnItemClickListener(new OnItemClickListener() {
+    protected void setupGalleryModelList(int count) {
+        mGalleryModelList = new ArrayList<MediaModel>();
+        for(int i= 0; i < count; i++) {
+            mCursor.moveToPosition(i);
+            String url = mCursor.getString(mDataColumnIndex);
+            mGalleryModelList.add(new MediaModel(url, false));
+        }
+    }
 
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				// update the mStatus of each category in the adapter
-				GridViewAdapter adapter = (GridViewAdapter) parent.getAdapter();
-				MediaModel galleryModel = (MediaModel) adapter.getItem(position);
+    private void setupOnItemLongClickListener() {
+        mVideoGridView.setOnItemLongClickListener(new OnItemLongClickListener() {
 
-				if(! galleryModel.status){
-					long size = MediaChooserConstants.ChekcMediaFileSize(new File(galleryModel.url.toString()), true);
-					if(size != 0){
-						Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.file_size_exeeded) + "  " + MediaChooserConstants.SELECTED_VIDEO_SIZE_IN_MB + " " +  getActivity().getResources().getString(R.string.mb), Toast.LENGTH_SHORT).show();
-						return;
-					}
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                GridViewAdapter adapter = (GridViewAdapter) parent.getAdapter();
+                MediaModel galleryModel = (MediaModel) adapter.getItem(position);
+                File file = new File(galleryModel.url);
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(Uri.fromFile(file), "video/*");
+                startActivity(intent);
+                return false;
+            }
+        });
+    }
 
-					if((MediaChooserConstants.MAX_MEDIA_LIMIT == MediaChooserConstants.SELECTED_MEDIA_COUNT)){
-						if (MediaChooserConstants.SELECTED_MEDIA_COUNT < 2) {
-							Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.max_limit_file) + "  " + MediaChooserConstants.SELECTED_MEDIA_COUNT + " " +  getActivity().getResources().getString(R.string.file), Toast.LENGTH_SHORT).show();
-							return;
-						} else {
-							Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.max_limit_file) + "  " + MediaChooserConstants.SELECTED_MEDIA_COUNT + " " +  getActivity().getResources().getString(R.string.files), Toast.LENGTH_SHORT).show();
-							return;
-						}
-					}
-				}
+    protected void setupOnItemClickListener() {
+        mVideoGridView.setOnItemClickListener(new OnItemClickListener() {
 
-				// inverse the status
-				galleryModel.status = ! galleryModel.status;
-				adapter.notifyDataSetChanged();
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // update the mStatus of each category in the adapter
+                GridViewAdapter adapter = (GridViewAdapter) parent.getAdapter();
+                MediaModel galleryModel = (MediaModel) adapter.getItem(position);
 
-				if (galleryModel.status) {
-					mSelectedItems.add(galleryModel.url.toString());
-					MediaChooserConstants.SELECTED_MEDIA_COUNT ++;
+                if(! galleryModel.status){
+                    long size = MediaChooserConstants.CheckMediaFileSize(new File(galleryModel.url.toString()), true);
+                    if(size != 0){
+                        Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.file_size_exeeded) + "  " + MediaChooserConstants.SELECTED_VIDEO_SIZE_IN_MB + " " + getActivity().getResources().getString(R.string.mb), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
-				}else{
-					mSelectedItems.remove(galleryModel.url.toString().trim());
-					MediaChooserConstants.SELECTED_MEDIA_COUNT --;
-				}
+                    if((MediaChooserConstants.MAX_MEDIA_LIMIT == MediaChooserConstants.SELECTED_MEDIA_COUNT)){
+                        if (MediaChooserConstants.SELECTED_MEDIA_COUNT < 2) {
+                            Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.max_limit_file) + "  " + MediaChooserConstants.SELECTED_MEDIA_COUNT + " " +  getActivity().getResources().getString(R.string.file), Toast.LENGTH_SHORT).show();
+                            return;
+                        } else {
+                            Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.max_limit_file) + "  " + MediaChooserConstants.SELECTED_MEDIA_COUNT + " " +  getActivity().getResources().getString(R.string.files), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    }
+                }
 
-				if (mCallback != null) {
-					mCallback.onVideoSelected(mSelectedItems.size());
-					Intent intent = new Intent();
-					intent.putStringArrayListExtra("list", mSelectedItems);
-					getActivity().setResult(Activity.RESULT_OK, intent);
-				}
+                // inverse the status
+                galleryModel.status = ! galleryModel.status;
+                adapter.notifyDataSetChanged();
 
-			}
-		});
+                if (galleryModel.status) {
+                    mSelectedItems.add(galleryModel.url.toString());
+                    MediaChooserConstants.SELECTED_MEDIA_COUNT ++;
 
-	}
+                }else{
+                    mSelectedItems.remove(galleryModel.url.toString().trim());
+                    MediaChooserConstants.SELECTED_MEDIA_COUNT --;
+                }
 
-	public void addItem(String item) {
+                if (mCallback != null) {
+                    mCallback.onVideoSelected(mSelectedItems.size());
+                    Intent intent = new Intent();
+                    intent.putStringArrayListExtra("list", mSelectedItems);
+                    getActivity().setResult(Activity.RESULT_OK, intent);
+                }
+
+            }
+        });
+    }
+
+    public void addItem(String item) {
 		if(mVideoAdapter != null){
 			MediaModel model = new MediaModel(item, false);
 			mGalleryModelList.add(0, model);
