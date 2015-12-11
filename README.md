@@ -7,11 +7,11 @@ Library to browse & select videos and images from disk.
 Screenshots
 -----------------------------------
 
-![Video items](https://dl.dropboxusercontent.com/u/61919232/learnNcode/MediaChooser/fileView.png "File view")
+![File View](Screenshots/FileView.png)
 
 <br>
 
-![Folder image items](https://dl.dropboxusercontent.com/u/61919232/learnNcode/MediaChooser/folderView.png "Folder view")
+![Folder View](https://dl.dropboxusercontent.com/u/61919232/learnNcode/MediaChooser/folderView.png)
 
 
 
@@ -25,18 +25,28 @@ Add following permission to your applications manifest file.
 Add following code to the application node of your application's manifest file
 ```xml
 <activity
-    android:name="com.learnncode.mediachooser.activity.BucketHomeFragmentActivity"
-    android:screenOrientation="portrait" >
-</activity>
-
-<activity
-    android:name="com.learnncode.mediachooser.activity.HomeFragmentActivity"
+    android:name="com.learnncode.mediachooser.activity.HomeScreenMediaChooser"
     android:screenOrientation="portrait" >
 </activity>
 ```
 
+Caution!
+_________________
+Eclipse library project structure has been dropped. If you wish to use this library in your eclipse IDE, please checkout MediaChooser-Eclipse. No further development will be done.
+
 ChangeLog
 -----------------------------------
+<b>Version 2.0 </b>
+
+__1]__ Gradle Build
+
+__2]__ Updated UI
+
+__3]__ Bug Fixes
+
+__4]__ Added new developer friendly methods :)
+
+
 <b>Version 1.0.6 </b>
 
    __1]__ Updated UI.
@@ -86,8 +96,7 @@ To display images and videos according to:
     
 __1]__ Folders 
 ```java
-Intent intent = new Intent(MainActivity.this, BucketHomeFragmentActivity.class);
-startActivity(intent);
+HomeScreenMediaChooser.startMediaChooser(MainActivity.this, true);
 ```
                
 __2]__ Files  
@@ -169,12 +178,12 @@ Check the attached demo sample app.
     
 Acknowledgement
 -----------------------------------
-[Picasso jar](http://square.github.io/picasso/)
+[androidquery jar](https://github.com/androidquery/androidquery)
     
 License
 -----------------------------------
 
-    Copyright 2013 learnNcode (learnncode@gmail.com)
+    Copyright 2015 learnNcode (learnncode@gmail.com)
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
