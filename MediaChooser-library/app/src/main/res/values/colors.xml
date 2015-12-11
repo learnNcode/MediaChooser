@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Gallery thumbnail background -->
+
+    <color name="colorPrimaryDark">#616161</color>
+    <color name="colorPrimary">#9E9E9E</color>
+    <color name="colorTab">#B6B6B6</color>
+    <color name="colorAccent">#536DFE</color>
+    <color name="color_light_primary">#F5F5F5</color>
+    <color name="color_secondary_text">#727272</color>
+    <drawable name="checked_item_bg">#30000000</drawable>
+
+    <!--<color name="tabs_color"> #81D4FA </color>-->
+    <!--<color name="tabs_title_color"> #FFFFFF </color>-->
+    <!--<color name="headerbar_title_color"> #FFFFFF </color>-->
+    <!--<color name="headerbar_selected_tab_color"> #34b4e3 </color>-->
+
+</resources>

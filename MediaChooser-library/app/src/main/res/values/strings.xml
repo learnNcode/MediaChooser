@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MediaChooser</string>
+    <string name="image"> Image </string>
+    <string name="video"> Video </string>
+    <string name="done"> Done </string>
+    <string name="images_tab"> Images </string>
+    <string name="videos_tab"> Videos </string>
+    <string name="max_limit_reach_error"> Max limit 10 file. </string>
+    <string name="max_limit_file"> Max limit </string>
+    <string name="please_wait_text"> Please wait</string>
+    <string name="refreshing"> Refreshing</string>
+    <string name="file_size_exceed"> The file size exceeds the maximum limit of </string>
+    <string name="selected_file_size">  Selected media size is : </string>
+    <string name="mb"> MB</string>
+    <string name="please_select_file"> Please select a file.</string>
+    <string name="file"> file. </string>
+    <string name="files"> files. </string>
+    <string name="no_media_file_available"> No media file available.</string>
+    <string name="title_activity_home_screen_media_chooser">HomeScreenMediaChooser</string>
+
+
+</resources>
