@@ -11,9 +11,11 @@ Screenshots
 
 <br>
 
-![Folder View](https://dl.dropboxusercontent.com/u/61919232/learnNcode/MediaChooser/folderView.png)
+![Folder View](Screenshots/FolderView.png)
 
+<br>
 
+![Selection View](Screenshots/Selection.png)
 
 Setup
 -----------------------------------
@@ -101,8 +103,7 @@ HomeScreenMediaChooser.startMediaChooser(MainActivity.this, true);
                
 __2]__ Files  
 ```java
-Intent intent = new Intent(MainActivity.this, HomeFragmentActivity.class);
-startActivity(intent);
+HomeScreenMediaChooser.startMediaChooser(MainActivity.this, false);
 ```        
         
         
