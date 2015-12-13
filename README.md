@@ -17,6 +17,12 @@ Screenshots
 
 ![Selection View](Screenshots/Selection.png)
 
+
+
+**Caution!**
+------------------------------
+Eclipse library project structure has been dropped. If you wish to use this library in your eclipse IDE, please checkout [ MediaChooser-Eclipse](https://github.com/learnNcode/MediaChooser/tree/master/MediaChooser-Eclipse). No further development will be done into [ MediaChooser-Eclipse](https://github.com/learnNcode/MediaChooser/tree/master/MediaChooser-Eclipse).
+
 Setup
 -----------------------------------
 Add following permission to your applications manifest file.
